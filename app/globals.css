@@ -3,6 +3,14 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  /* Global gutter token: 12px on small screens, 32px on the wide layout. */
+  --grid-gutter: 0.75rem;
+}
+
+@media (width >= theme(--breakpoint-xl)) {
+  :root {
+    --grid-gutter: 2rem;
+  }
 }
 
 @theme inline {
@@ -10,13 +18,14 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  /* Registers gap-gutter, p-gutter, m-gutter, etc. that track --grid-gutter. */
+  --spacing-gutter: var(--grid-gutter);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@theme {
+  /* Content widths: 688px by default, 1360px on wide viewports. */
+  --container-2xl: 43rem;
+  --container-7xl: 85rem;
 }
 
 body {

@@ -1,0 +1,134 @@
+.root {
+  container-type: inline-size;
+  /* Padding is peek + gap so the visible sliver of the neighbouring
+     slide is exactly --peek wide (the gap eats the rest). */
+  --carousel-pad: calc(var(--peek) + var(--gap));
+}
+
+.frame {
+  position: relative;
+}
+
+.bleed {
+  margin-inline: calc(-1 * var(--carousel-pad));
+}
+
+/* Fade over the peek zones. Invisible unless the consumer sets
+   --carousel-fade to (a gradient-from color matching) the page background. */
+.frame::before,
+.frame::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: var(--carousel-pad);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.frame::before {
+  left: 0;
+  background: linear-gradient(to right, var(--carousel-fade, transparent), transparent);
+}
+
+.frame::after {
+  right: 0;
+  background: linear-gradient(to left, var(--carousel-fade, transparent), transparent);
+}
+
+.track {
+  display: flex;
+  gap: var(--gap);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  padding-inline: var(--carousel-pad);
+  scroll-padding-inline: var(--carousel-pad);
+  scrollbar-width: none;
+}
+
+.track::-webkit-scrollbar {
+  display: none;
+}
+
+.track:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .track {
+    scroll-behavior: smooth;
+  }
+}
+
+.slide {
+  flex: 0 0 calc((100% - (var(--spv, 1) - 1) * var(--gap)) / var(--spv, 1));
+  min-width: 0;
+  scroll-snap-align: start;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.arrow {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  transition: background-color 150ms ease, opacity 150ms ease;
+}
+
+.arrow:hover:not([aria-disabled="true"]) {
+  background-color: color-mix(in srgb, currentColor 8%, transparent);
+}
+
+.arrow[aria-disabled="true"] {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.dots {
+  display: flex;
+}
+
+.dot {
+  display: grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.dot::before {
+  content: "";
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background-color: currentColor;
+  opacity: 0.25;
+  transition: opacity 150ms ease;
+}
+
+.dot:hover::before {
+  opacity: 0.55;
+}
+
+.dot[aria-current="true"]::before {
+  opacity: 1;
+}
