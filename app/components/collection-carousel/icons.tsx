@@ -71,3 +71,20 @@ export function ButtonChevronIcon(props: IconProps) {
     </Icon>
   )
 }
+
+/** The player-control arrows: 20px lucide chevrons at 1.67px. */
+export function ControlChevronLeftIcon(props: IconProps) {
+  return (
+    <Icon size={20} strokeWidth={1.66667} {...props}>
+      <path d="M12.5 15L7.5 10L12.5 5" />
+    </Icon>
+  )
+}
+
+export function ControlChevronRightIcon(props: IconProps) {
+  return (
+    <Icon size={20} strokeWidth={1.66667} {...props}>
+      <path d="M7.5 15L12.5 10L7.5 5" />
+    </Icon>
+  )
+}

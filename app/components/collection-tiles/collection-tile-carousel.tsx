@@ -9,7 +9,7 @@ import {
   useRef,
   useState,
 } from "react"
-import { ChevronLeftIcon, ChevronRightIcon } from "../collection-carousel/icons"
+import { ControlChevronLeftIcon, ControlChevronRightIcon } from "../collection-carousel/icons"
 import { getPositions, nearestIndex, resolveIndex } from "../scroll-geometry"
 import CollectionTile from "./collection-tile"
 import styles from "./collection-tile-carousel.module.css"
@@ -303,14 +303,16 @@ export default function CollectionTileCarousel({
       data-measured={measured || undefined}
       className={`${styles.root} bg-sunken font-noto text-ink`}
     >
-      <div className="flex flex-col gap-8 pt-6 pb-8">
+      {/* Vertical rhythm from the file: 40px above the rail and 48px below
+          it on mobile; 64px above and below the row on desktop. */}
+      <div className="flex flex-col gap-8 pt-10 pb-12 @5xl:pt-16 @5xl:pb-16">
         {/* Controls precede the tiles in the DOM so they're reached first;
             CSS order places them below, as designed. They only exist when
             there is more than one page. */}
         {pageCount > 1 && (
-          <div className={`${styles.controls} order-last flex items-center justify-center gap-3`}>
+          <div className={`${styles.controls} order-last flex items-center justify-center gap-4`}>
             <ControlButton label={text.previous} controls={trackId} disabled={atStart} onClick={() => step(-1)}>
-              <ChevronLeftIcon />
+              <ControlChevronLeftIcon />
             </ControlButton>
             <div role="group" aria-label={text.pages} className="flex items-center gap-4">
               {Array.from({ length: pageCount }, (_, position) => (
@@ -325,14 +327,12 @@ export default function CollectionTileCarousel({
                   aria-controls={trackId}
                   aria-current={position === page ? "true" : undefined}
                   onClick={() => goTo(position)}
-                  className={`${styles.dot} relative size-2.5 rounded-full after:absolute after:-inset-2 after:content-[''] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-focus-ring ${
-                    position === page ? "bg-ink" : "bg-ink/25 hover:bg-ink/50"
-                  }`}
+                  className={`${styles.dot} relative size-2.5 rounded-full after:absolute after:-inset-2 after:content-['']`}
                 />
               ))}
             </div>
             <ControlButton label={text.next} controls={trackId} disabled={atEnd} onClick={() => step(1)}>
-              <ChevronRightIcon />
+              <ControlChevronRightIcon />
             </ControlButton>
           </div>
         )}
@@ -400,10 +400,8 @@ function ControlButton({
       }}
       // The design dims a control at the end of its range rather than
       // removing it; keeping it focusable means keyboard users don't lose
-      // their place when they reach an end.
-      className={`hidden size-8 place-items-center rounded-full bg-sunken text-ink-secondary transition-[opacity,background-color,color] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring @5xl:grid ${
-        disabled ? "cursor-default opacity-50" : "hover:bg-white hover:text-ink"
-      }`}
+      // their place when they reach an end. States live in the module.
+      className={`${styles.control} hidden size-8 place-items-center rounded-full @5xl:grid`}
     >
       {children}
     </button>

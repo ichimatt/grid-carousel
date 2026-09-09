@@ -22,6 +22,7 @@ export default function CollectionTile({
 }) {
   const theme = {
     "--theme-color": tile.theme.color,
+    "--theme-bg": tile.theme.bg,
     "--theme-text": tile.theme.text,
   } as CSSProperties
 
@@ -33,7 +34,7 @@ export default function CollectionTile({
       className={`${styles.tile} flex w-full rounded-lg bg-white p-1 text-ink shadow-elevation-1 ${className}`}
     >
       {/* <a> is transparent, so block wrappers and the heading are valid here. */}
-      <div className="flex w-full flex-col gap-2 overflow-clip rounded-sm bg-[linear-gradient(to_bottom,color-mix(in_srgb,var(--theme-color)_10%,white),white_50%)] pb-5">
+      <div className="flex w-full flex-col gap-2 overflow-clip rounded-sm bg-[linear-gradient(to_bottom,var(--theme-bg),white_50%)] pb-5">
         {/* The graphic is drawn ~5x larger than its box so its hairlines run
             out across the hero and are clipped by it. */}
         <div className="flex items-center justify-center overflow-clip px-6 py-4">

@@ -116,9 +116,62 @@
   }
 }
 
-/* Dots reach outside their 10px box for a comfortable hit area. */
+/* player-control states from the library: sunken at rest, white on hover,
+   a line-colour border when pressed, and on focus a 2px ring held 1px off
+   the control by a sunken-coloured gap. Only the icon dims when disabled. */
+.control {
+  background: var(--color-sunken);
+  color: var(--color-ink-secondary);
+  transition: background-color 150ms ease, color 150ms ease, box-shadow 150ms ease;
+}
+
+.control:not([aria-disabled="true"]):hover,
+.control:not([aria-disabled="true"]):active,
+.control:focus-visible {
+  background: var(--color-white);
+  color: var(--color-ink);
+}
+
+.control:not([aria-disabled="true"]):active {
+  box-shadow: inset 0 0 0 1px var(--color-line);
+}
+
+.control:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 1px var(--color-sunken),
+    0 0 0 3px var(--color-focus-ring);
+}
+
+.control[aria-disabled="true"] {
+  cursor: default;
+}
+
+.control[aria-disabled="true"] svg {
+  opacity: 0.5;
+}
+
+/* indicator-dot states: inactive dots rise from 25% to 50% on hover or
+   focus, the active dot never changes fill, and focus rings any dot 3px out.
+   Dots reach outside their 10px box for a comfortable hit area. */
 .dot {
   overflow: visible;
+  background: color-mix(in srgb, var(--color-ink) 25%, transparent);
+  transition: background-color 150ms ease;
+}
+
+.dot:hover,
+.dot:focus-visible {
+  background: color-mix(in srgb, var(--color-ink) 50%, transparent);
+}
+
+.dot[aria-current="true"] {
+  background: var(--color-ink);
+}
+
+.dot:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 3px;
 }
 
 @media (forced-colors: active) {
