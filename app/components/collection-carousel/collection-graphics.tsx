@@ -15,8 +15,8 @@ export type GraphicName =
   | "healthcare"
   | "equaliser"
 
-/** Figma token graphic-faint-opacity (11%). */
-const FAINT = 0.11
+/** Figma token graphic-faint-opacity (7%). */
+const FAINT = 0.07
 /** Figma token hollow-color. */
 const HOLLOW = "var(--hollow-color, #fff)"
 
