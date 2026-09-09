@@ -1,0 +1,133 @@
+/* The carousel responds to its own width, so the mobile rail and the paged
+   desktop treatment can sit side by side on one review page. */
+.root {
+  container-type: inline-size;
+}
+
+/* --spv is how many tiles are visible across the track. On the rail it is
+   fractional so half of the next tile always peeks; --gaps is how many 12px
+   gaps sit inside that view. From 64rem the tiles fill the 1360px content
+   width, as many as fit at a 198px minimum (tile + gap = 210px per column).
+   --page is how many tiles the dots and arrows step by: one on the rail, a
+   full row on desktop. Declared here rather than as utility variants so the
+   breakpoints cascade in size order. */
+.track {
+  --spv: 1.5;
+  --gaps: 1;
+  --page: 1;
+  /* The rail's 24px right padding is visible area too, so it counts toward
+     the view when sizing tiles; the desktop scroller has no visible padding. */
+  --visible-padding: 1.5rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.track::-webkit-scrollbar {
+  display: none;
+}
+
+@container (min-width: 36rem) {
+  .track {
+    --spv: 2.5;
+    --gaps: 2;
+  }
+}
+
+@container (min-width: 56rem) {
+  .track {
+    --spv: 3.5;
+    --gaps: 3;
+  }
+}
+
+@container (min-width: 64rem) {
+  .track {
+    --spv: 4;
+    --gaps: 3;
+    --page: 4;
+    --visible-padding: 0rem;
+  }
+}
+
+@container (min-width: 67.875rem) {
+  .track {
+    --spv: 5;
+    --gaps: 4;
+    --page: 5;
+  }
+}
+
+@container (min-width: 81rem) {
+  .track {
+    --spv: 6;
+    --gaps: 5;
+    --page: 6;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .track {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Hairlines stay 1px however far the graphic is scaled up. */
+.graphic :is(path, circle) {
+  vector-effect: non-scaling-stroke;
+  stroke-width: var(--graphic-stroke-width, 1px);
+}
+
+/* Tile states from the handover: hover and focus lift the shadow to
+   elevation-2 and colour the course-count row with the theme; focus adds a
+   2px ring 1px outside the tile. data-state forces a look for documentation. */
+.tile {
+  transition: box-shadow 150ms ease;
+}
+
+.tile:hover,
+.tile:focus-visible,
+.tile[data-state="hover"],
+.tile[data-state="focus"] {
+  box-shadow: var(--shadow-elevation-2);
+}
+
+.tile:hover .link,
+.tile:focus-visible .link,
+.tile[data-state="hover"] .link,
+.tile[data-state="focus"] .link {
+  color: var(--theme-text);
+}
+
+.tile:focus-visible,
+.tile[data-state="focus"] {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 1px;
+}
+
+/* The server can't know how many tiles fit, so above 64rem the paging
+   controls stay out of the flow until the first measurement; below it the
+   rail always has one dot per tile, so the server-rendered row is right. */
+@container (min-width: 64rem) {
+  .root:not([data-measured]) .controls {
+    display: none;
+  }
+}
+
+/* Dots reach outside their 10px box for a comfortable hit area. */
+.dot {
+  overflow: visible;
+}
+
+@media (forced-colors: active) {
+  .dot {
+    border: 1px solid ButtonText;
+  }
+
+  .dot[aria-current="true"] {
+    forced-color-adjust: none;
+    background: Highlight;
+  }
+}
