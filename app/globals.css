@@ -28,8 +28,34 @@
   --container-7xl: 85rem;
 }
 
+/* Wireframe palette for the GetSmarter collection prototypes. Tints of the
+   single hue are taken with opacity modifiers (bg-wf/14, bg-wf/20). */
+@theme {
+  --color-wf: #5056c7;
+  --color-wf-sky: #eff2f5;
+  --color-wf-mist: #b1c0cf;
+}
+
+@theme inline {
+  /* Registered by the collection layout via next/font. */
+  --font-noto: var(--font-noto-sans);
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* High-fidelity tokens from the Course-collections Figma library ("m-"
+   variables): ink text, secondary ink for controls, the sunken page
+   background, and the elevation-1 card shadow. */
+@theme {
+  --color-ink: #082135;
+  --color-ink-secondary: #5d6165;
+  --color-sunken: #f1f4f8;
+  --color-line: #dce0e5;
+  --color-focus-ring: #1794ff;
+  --shadow-elevation-1: 0 2px 4px 0 rgba(30, 33, 37, 0.1);
+  --shadow-elevation-2: 0 4px 8px 0 rgba(30, 33, 37, 0.1);
 }

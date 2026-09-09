@@ -1,0 +1,42 @@
+/* Same peek mechanics as the shared carousel component: the track hangs its
+   padding outside the container (bleed) so resting cells align with the page
+   content and the next cell peeks into the page padding. */
+
+.track {
+  display: flex;
+  gap: var(--gap);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  margin-inline: calc(-1 * var(--pad));
+  padding-inline: var(--pad);
+  scroll-padding-inline: var(--pad);
+  scrollbar-width: none;
+}
+
+.track::-webkit-scrollbar {
+  display: none;
+}
+
+.track:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* Only the track the user is driving keeps snap; the mirrored tracks follow
+   it pixel-for-pixel and must not fight the sync with their own snapping. */
+.track[data-follower="true"] {
+  scroll-snap-type: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .track {
+    scroll-behavior: smooth;
+  }
+}
+
+.cell {
+  flex: 0 0 100%;
+  min-width: 0;
+  scroll-snap-align: start;
+}
