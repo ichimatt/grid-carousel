@@ -117,38 +117,45 @@ export default function SiteHeader() {
         >
           <Link
             href="/collections/enterprise-ai"
-            className="flex items-center pr-5 pl-[21px]"
+            className="flex shrink-0 items-center pr-5 pl-[21px]"
             aria-label="GetSmarter home"
           >
             <Image src="/collections/logo-desktop.svg" alt="" width={159} height={36} />
           </Link>
-          <nav aria-label="Primary" className="flex flex-1 items-stretch">
-            <button type="button" className="flex items-center gap-4 px-[26px]">
+          {/* As on getsmarter.com: 10px link padding with the remaining space
+              shared out around the links, so they close up rather than wrap
+              as the bar narrows; below 1280px the single bar takes over. */}
+          <nav
+            aria-label="Primary"
+            className="flex flex-1 items-stretch justify-around whitespace-nowrap"
+          >
+            <button type="button" className="flex items-center gap-4 px-2.5">
               Explore
               <ChevronDown />
             </button>
             {navLinks.map((link) => (
-              <a key={link} href="#" className="flex items-center px-[26px]">
+              <a key={link} href="#" className="flex items-center px-2.5">
                 {link}
               </a>
             ))}
           </nav>
-          <div className="flex items-center gap-5 pr-5">
-            <div className="flex items-center gap-1 pl-[26px]">
-              <Image
-                src="/collection/icn-search.svg"
-                alt=""
-                width={16}
-                height={16}
-                className="opacity-80"
-              />
-              <input
-                type="search"
-                placeholder="Enter a search term..."
-                aria-label="Search"
-                className="w-[206px] bg-transparent py-1 text-sm font-light text-white italic placeholder:text-[#ccc] focus:outline-none focus-visible:border-b focus-visible:border-white/60"
-              />
-            </div>
+          {/* The search field gives up width first, down to 145px. */}
+          <div className="flex basis-[252px] items-center gap-1 pl-[26px]">
+            <Image
+              src="/collection/icn-search.svg"
+              alt=""
+              width={16}
+              height={16}
+              className="shrink-0 opacity-80"
+            />
+            <input
+              type="search"
+              placeholder="Enter a search term..."
+              aria-label="Search"
+              className="w-0 min-w-[145px] flex-1 bg-transparent py-1 text-sm font-light text-white italic placeholder:text-[#ccc] focus:outline-none focus-visible:border-b focus-visible:border-white/60"
+            />
+          </div>
+          <div className="flex shrink-0 items-center px-5">
             <button
               type="button"
               className="h-[46px] w-[168px] rounded-[28px] bg-[#e51470] text-sm/[21px] text-white capitalize"
