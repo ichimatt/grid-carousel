@@ -1,22 +1,19 @@
 /*
- * Desktop: the blurb floats in a "vh" box that grows with the viewport
- * height up to --stage-max, so it sits further down the page on taller
- * screens (94px below the grid top for the 348px blurb at the cap, as in the
- * Figma frame). The box then sticks under the header while the course list
- * scrolls past it.
+ * Desktop: the blurb sits at the top of its column on short viewports and
+ * moves down as the viewport gets taller, half a pixel per pixel of extra
+ * height from --stage-from up to --stage-max (the Figma frame's 94px offset,
+ * reached at 956px). The column then sticks under the header while the
+ * course list scrolls past it.
  */
 .stage {
-  --stage-max: 536px;
+  --stage-from: 768px;
+  --stage-max: 94px;
 }
 
 @media (width >= 64rem) {
   .stage {
     position: sticky;
     top: calc(var(--header-h) + 2.5rem);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    /* Space below the sticky top, less 40px of breathing room at the bottom. */
-    min-height: min(calc(100dvh - var(--header-h) - 5rem), var(--stage-max));
+    padding-top: clamp(0px, calc((100dvh - var(--stage-from)) / 2), var(--stage-max));
   }
 }
