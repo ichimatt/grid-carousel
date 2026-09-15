@@ -1,9 +1,10 @@
 /*
- * Desktop: the blurb sits at the top of its column on short viewports and
- * moves down as the viewport gets taller, half a pixel per pixel of extra
- * height from --stage-from up to --stage-max (the Figma frame's 94px offset,
- * reached at 956px). The column then sticks under the header while the
- * course list scrolls past it.
+ * From 1024px the blurb column sticks under the header while the course
+ * list scrolls past it. At the largest breakpoint (1280px, with the full
+ * desktop header) it also moves down as the viewport gets taller: half a
+ * pixel per pixel of extra height from --stage-from up to --stage-max (the
+ * Figma frame's 94px offset, reached at 956px). Below that it stays at the
+ * top of its column.
  */
 .stage {
   --stage-from: 768px;
@@ -14,6 +15,11 @@
   .stage {
     position: sticky;
     top: calc(var(--header-h) + 2.5rem);
+  }
+}
+
+@media (width >= 80rem) {
+  .stage {
     padding-top: clamp(0px, calc((100dvh - var(--stage-from)) / 2), var(--stage-max));
   }
 }
