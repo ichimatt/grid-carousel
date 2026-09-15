@@ -59,3 +59,10 @@ body {
   --shadow-elevation-1: 0 2px 4px 0 rgba(30, 33, 37, 0.1);
   --shadow-elevation-2: 0 4px 8px 0 rgba(30, 33, 37, 0.1);
 }
+
+/* Hi-fi collection page tokens: tertiary ink for card metadata and the
+   informative blue used by the course-stage kickers. */
+@theme {
+  --color-ink-tertiary: #717579;
+  --color-informative: #0068b9;
+}
