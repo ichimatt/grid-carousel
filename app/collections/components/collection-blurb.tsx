@@ -4,17 +4,22 @@ import type { Collection } from "@/app/components/collection-carousel/collection
 /**
  * The collection's intro: themed kicker tag and course count, the title, and
  * the blurb. The tag border and kicker text take the collection's theme
- * colours through CSS variables, as the collection carousel does.
+ * colours through CSS variables, as the collection carousel does. The
+ * "wide" variant is the full-width version-ii blurb, which caps the title
+ * at 1024px and the intro at 672px instead of filling a narrow column.
  */
 export default function CollectionBlurb({
   collection,
   intro,
+  variant = "column",
   className = "",
 }: {
   collection: Collection
   intro: string
+  variant?: "column" | "wide"
   className?: string
 }) {
+  const wide = variant === "wide"
   const themeVars = {
     "--theme-color": collection.theme.color,
     "--theme-text": collection.theme.text,
@@ -28,10 +33,12 @@ export default function CollectionBlurb({
         </span>
         <span>{collection.courseCount}</span>
       </p>
-      <h1 className="text-[26px]/9 font-semibold tracking-[-0.26px] text-balance lg:text-[37px]/12 lg:tracking-[-0.46px]">
+      <h1
+        className={`text-[26px]/9 font-semibold tracking-[-0.26px] text-balance lg:text-[37px]/12 lg:tracking-[-0.46px] ${wide ? "max-w-[1024px]" : ""}`}
+      >
         {collection.title}
       </h1>
-      <p className="text-base/6">{intro}</p>
+      <p className={`text-base/6 ${wide ? "max-w-[672px]" : ""}`}>{intro}</p>
     </div>
   )
 }

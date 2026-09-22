@@ -1,5 +1,6 @@
 import Image from "next/image"
 import Link from "next/link"
+import { focusRing } from "./focus-ring"
 
 const navLinks = [
   "Browse Short Courses",
@@ -44,7 +45,7 @@ export default function SiteHeader() {
       >
         <button
           type="button"
-          className="flex shrink-0 items-center gap-3 px-3.5"
+          className={`flex shrink-0 items-center gap-3 px-3.5 ${focusRing}`}
           aria-label="Expand menu"
         >
           <Image src="/collection/icn-ham.svg" alt="" width={28} height={22} />
@@ -55,15 +56,23 @@ export default function SiteHeader() {
         <div className="my-2 w-px bg-[#b1c0cf]" aria-hidden="true" />
         <Link
           href="/collections/enterprise-ai"
-          className="flex items-center px-[11px]"
+          className={`flex items-center px-[11px] ${focusRing}`}
           aria-label="GetSmarter home"
         >
-          <Image src="/collections/logo-mobile.svg" alt="" width={62} height={32} />
+          <Image
+            src="/collections/logo-mobile.svg"
+            alt=""
+            width={62}
+            height={32}
+            // Explicit box: preflight's height:auto would otherwise resize
+            // one axis and trip next/image's aspect-ratio warning.
+            className="h-8 w-[62px]"
+          />
         </Link>
         <div className="flex flex-1 items-center justify-end pr-3">
           <button
             type="button"
-            className="h-9 w-[118px] rounded-[28px] bg-[#e51470] text-sm/[21px] text-white capitalize"
+            className={`h-9 w-[118px] rounded-[28px] bg-[#e51470] text-sm/[21px] text-white capitalize ${focusRing}`}
           >
             Registrations
           </button>
@@ -71,7 +80,7 @@ export default function SiteHeader() {
         <div className="my-2 w-px bg-[#b1c0cf]" aria-hidden="true" />
         <button
           type="button"
-          className="grid w-[50px] shrink-0 place-items-center"
+          className={`grid w-[50px] shrink-0 place-items-center ${focusRing}`}
           aria-label="Search"
         >
           <Image src="/collection/icn-search.svg" alt="" width={24} height={24} />
@@ -81,28 +90,33 @@ export default function SiteHeader() {
       {/* Utility bar + navigation bar */}
       <div className="hidden xl:block">
         <div className="flex h-10 items-stretch bg-[#eff2f5] text-xs text-ink">
+          {/* A mode switch rather than the current page, hence aria-current="true". */}
           <a
             href="#"
-            className="grid w-40 place-items-center bg-ink text-[#eff2f5]"
-            aria-current="page"
+            className={`grid w-40 place-items-center bg-ink text-[#eff2f5] ${focusRing}`}
+            aria-current="true"
           >
             FOR YOU
           </a>
-          <a href="#" className="grid w-40 place-items-center">
+          <a href="#" className={`grid w-40 place-items-center ${focusRing}`}>
             FOR BUSINESS
           </a>
           <div className="flex flex-1 items-center justify-end gap-3.5 pr-5">
             <div className="flex items-center gap-2">
-              <a href="#">LOGOUT</a>
+              <a href="#" className={`rounded-xs ${focusRing}`}>
+                LOGOUT
+              </a>
               <span className="text-sm text-[#212529]" aria-hidden="true">
                 |
               </span>
-              <a href="#">MY PROFILE</a>
+              <a href="#" className={`rounded-xs ${focusRing}`}>
+                MY PROFILE
+              </a>
             </div>
             <label className="flex items-center">
               <span className="sr-only">Currency</span>
               <select
-                className="border border-[#767676] bg-white py-0.5 pr-4 pl-1 text-sm/[19px] text-black"
+                className={`border border-[#767676] bg-white py-0.5 pr-4 pl-1 text-sm/[19px] text-black ${focusRing}`}
                 defaultValue="ZAR"
               >
                 <option>ZAR</option>
@@ -117,10 +131,16 @@ export default function SiteHeader() {
         >
           <Link
             href="/collections/enterprise-ai"
-            className="flex shrink-0 items-center pr-5 pl-[21px]"
+            className={`flex shrink-0 items-center pr-5 pl-[21px] ${focusRing}`}
             aria-label="GetSmarter home"
           >
-            <Image src="/collections/logo-desktop.svg" alt="" width={159} height={36} />
+            <Image
+              src="/collections/logo-desktop.svg"
+              alt=""
+              width={159}
+              height={36}
+              className="h-9 w-[159px]"
+            />
           </Link>
           {/* As on getsmarter.com: 10px link padding with the remaining space
               shared out around the links, so they close up rather than wrap
@@ -129,12 +149,19 @@ export default function SiteHeader() {
             aria-label="Primary"
             className="flex flex-1 items-stretch justify-around whitespace-nowrap"
           >
-            <button type="button" className="flex items-center gap-4 px-2.5">
+            <button
+              type="button"
+              className={`flex items-center gap-4 px-2.5 ${focusRing}`}
+            >
               Explore
               <ChevronDown />
             </button>
             {navLinks.map((link) => (
-              <a key={link} href="#" className="flex items-center px-2.5">
+              <a
+                key={link}
+                href="#"
+                className={`flex items-center px-2.5 ${focusRing}`}
+              >
                 {link}
               </a>
             ))}
@@ -152,13 +179,13 @@ export default function SiteHeader() {
               type="search"
               placeholder="Enter a search term..."
               aria-label="Search"
-              className="w-0 min-w-[145px] flex-1 bg-transparent py-1 text-sm font-light text-white italic placeholder:text-[#ccc] focus:outline-none focus-visible:border-b focus-visible:border-white/60"
+              className={`w-0 min-w-[145px] flex-1 rounded-xs bg-transparent py-1 text-sm font-light text-white italic placeholder:text-[#ccc] ${focusRing}`}
             />
           </div>
           <div className="flex shrink-0 items-center px-5">
             <button
               type="button"
-              className="h-[46px] w-[168px] rounded-[28px] bg-[#e51470] text-sm/[21px] text-white capitalize"
+              className={`h-[46px] w-[168px] rounded-[28px] bg-[#e51470] text-sm/[21px] text-white capitalize ${focusRing}`}
             >
               Register now
             </button>

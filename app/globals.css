@@ -66,3 +66,25 @@ body {
   --color-ink-tertiary: #717579;
   --color-informative: #0068b9;
 }
+
+/* Chevron glyphs for inline course links. The 2u arrows webfont maps "<" and
+   ">" (and the arrows) to chevrons sitting on the text baseline; the
+   unicode-range keeps it from loading until one of those glyphs is used. */
+@font-face {
+  font-family: "2u-arrows";
+  src: url("/2u-arrows-baseline-adjusted-webfont.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+  unicode-range: U+003C, U+003E, U+2190, U+2192;
+}
+
+/* Hi-fi collection page (version ii) tokens: the arrows font, the subtle
+   link colour for "more" toggles, the outlined button's hover fill and the
+   raised card shadow used on hover. */
+@theme {
+  --font-arrows: "2u-arrows", sans-serif;
+  --color-link-subtle: #395978;
+  --color-button-inverse-hover: #f6f8fb;
+  --shadow-elevation-3: 0 8px 10px 0 rgba(30, 33, 37, 0.1);
+}

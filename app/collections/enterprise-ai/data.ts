@@ -6,6 +6,7 @@
  */
 
 import { collections } from "@/app/components/collection-carousel/collections"
+import type { CollectionCourse } from "../types"
 
 const enterpriseAi = collections.find((c) => c.slug === "enterprise-ai")
 if (!enterpriseAi) throw new Error("Enterprise AI collection missing")
@@ -17,21 +18,7 @@ export const collection = {
     "Looking for an AI business class built for senior decision-makers? Everyone has run a pilot. Almost nobody has changed how the organisation actually works. These AI essentials for business courses from MIT cover strategy, adoption, agents, and the operating model holding it together. Each one enters the problem at a different point—the sections below will tell you where you come in.",
 }
 
-export type CollectionCourse = {
-  slug: string
-  title: string
-  provider: string
-  image: string
-  /** Ribbon on the card image: "Short course • 6 weeks". */
-  type: string
-  duration: string
-  startDate: string
-  /** Journey-stage kicker above the explainer. */
-  stage: string
-  /** Bold question lead-in, then the regular remainder. */
-  note: { lead: string; rest: string }
-  href: string
-}
+export type { CollectionCourse } from "../types"
 
 export const courses: CollectionCourse[] = [
   {
