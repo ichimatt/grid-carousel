@@ -26,8 +26,6 @@ export const courses: CollectionCourse[] = [
     title: "AI: Implications for Business Strategy",
     provider: "MIT Sloan and MIT CSAIL",
     image: "/collection/course-implications.jpg",
-    type: "Short course",
-    duration: "6 weeks",
     startDate: "1 Oct",
     stage: "Build your foundation",
     note: {
@@ -41,8 +39,6 @@ export const courses: CollectionCourse[] = [
     title: "AI Adoption: Driving Business Value and Impact",
     provider: "MIT Sloan School of Management",
     image: "/collection/course-adoption.jpg",
-    type: "Short course",
-    duration: "6 weeks",
     startDate: "7 Oct",
     stage: "Scale across the business",
     note: {
@@ -56,8 +52,6 @@ export const courses: CollectionCourse[] = [
     title: "Managing AI and People",
     provider: "MIT Sloan",
     image: "/collection/course-managing.jpg",
-    type: "Short course",
-    duration: "6 weeks",
     startDate: "1 Oct",
     stage: "Run an AI-enabled team",
     note: {
@@ -71,8 +65,6 @@ export const courses: CollectionCourse[] = [
     title: "Implementing Agentic AI: Building Your Organizational Playbook",
     provider: "MIT Sloan and MIT Schwarzman College",
     image: "/collection/course-agentic.jpg",
-    type: "Micro course",
-    duration: "3 weeks",
     startDate: "1 Oct",
     stage: "Put agents to work",
     note: {
@@ -86,8 +78,6 @@ export const courses: CollectionCourse[] = [
     title: "Enterprise AI Programme",
     provider: "MIT Sloan School of Management",
     image: "/collection/course-enterprise.jpg",
-    type: "Course stack",
-    duration: "18 weeks",
     startDate: "1 Oct",
     stage: "Take the whole journey",
     note: {

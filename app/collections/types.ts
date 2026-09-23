@@ -5,9 +5,6 @@ export type CollectionCourse = {
   title: string
   provider: string
   image: string
-  /** Ribbon on the card image: "Short course • 6 weeks". */
-  type: string
-  duration: string
   startDate: string
   /** Journey-stage headline: "Build your foundation". */
   stage: string
