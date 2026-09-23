@@ -1,6 +1,6 @@
 "use client"
 
-import { useId, useRef, useState, type KeyboardEvent } from "react"
+import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react"
 import type { CompareAttribute, SpringboardCourse } from "../types"
 import ComparisonItem from "./comparison-item"
 import Container from "./container"
@@ -83,13 +83,40 @@ export default function CompareSection({
   const [activeIndex, setActiveIndex] = useState(0)
   const active = attributes[activeIndex]
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([])
+  const tablistRef = useRef<HTMLDivElement | null>(null)
+  const panelRef = useRef<HTMLDivElement | null>(null)
+  // Counts the user's tab choices so the reveal below runs after each one,
+  // once the chosen values are laid out, even when the choice is repeated.
+  const [reveals, setReveals] = useState(0)
 
   // Selection follows focus, as in an APG automatic-activation tablist.
   const selectTab = (index: number) => {
     const next = (index + attributes.length) % attributes.length
     setActiveIndex(next)
-    tabRefs.current[next]?.focus()
+    setReveals((count) => count + 1)
+    // The reveal below does the scrolling, with the tabs kept in view.
+    tabRefs.current[next]?.focus({ preventScroll: true })
   }
+
+  useEffect(() => {
+    if (reveals === 0) return
+    const tablist = tablistRef.current
+    const panel = panelRef.current
+    if (!tablist || !panel) return
+    // Scroll just far enough to show the values under the tabs, but never so
+    // far that the tabs slide under the sticky header. If the tabs are
+    // already under it (the page was scrolled with a tab still focused),
+    // bring them back first instead.
+    const gap = 16
+    const headerHeight =
+      parseFloat(getComputedStyle(panel).getPropertyValue("--header-h")) || 0
+    const hiddenBelow = panel.getBoundingClientRect().bottom + gap - window.innerHeight
+    const room = tablist.getBoundingClientRect().top - headerHeight - gap
+    const distance = room < 0 ? room : Math.min(hiddenBelow, room)
+    if (Math.abs(distance) < 1) return
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    window.scrollBy({ top: distance, behavior: reduceMotion ? "auto" : "smooth" })
+  }, [reveals])
 
   const onTabKeyDown = (event: KeyboardEvent) => {
     const targets: Record<string, number> = {
@@ -136,6 +163,7 @@ export default function CompareSection({
             </div>
 
             <div
+              ref={tablistRef}
               role="tablist"
               aria-label="Compare by"
               onKeyDown={onTabKeyDown}
@@ -183,6 +211,7 @@ export default function CompareSection({
             </ul>
             {/* tabIndex: the panel holds plain text, so it takes focus itself (APG tabs). */}
             <div
+              ref={panelRef}
               role="tabpanel"
               id={panelId}
               aria-labelledby={tabId(activeIndex)}
