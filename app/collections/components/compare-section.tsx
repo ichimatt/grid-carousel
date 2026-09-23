@@ -103,16 +103,21 @@ export default function CompareSection({
     const tablist = tablistRef.current
     const panel = panelRef.current
     if (!tablist || !panel) return
-    // Scroll just far enough to show the values under the tabs, but never so
-    // far that the tabs slide under the sticky header. If the tabs are
-    // already under it (the page was scrolled with a tab still focused),
-    // bring them back first instead.
+    // Only act when the values are not wholly in view. Then scroll just far
+    // enough to show them under the tabs, never so far that the tabs slide
+    // under the sticky header; if the values are above the viewport (the
+    // page was scrolled with a tab still focused), bring the tabs back down.
     const gap = 16
     const headerHeight =
       parseFloat(getComputedStyle(panel).getPropertyValue("--header-h")) || 0
-    const hiddenBelow = panel.getBoundingClientRect().bottom + gap - window.innerHeight
+    const { top: panelTop, bottom: panelBottom } = panel.getBoundingClientRect()
+    // A pixel of tolerance so sub-pixel layout never counts as hidden.
+    if (panelTop >= headerHeight - 1 && panelBottom <= window.innerHeight + 1) return
     const room = tablist.getBoundingClientRect().top - headerHeight - gap
-    const distance = room < 0 ? room : Math.min(hiddenBelow, room)
+    const distance =
+      panelTop < headerHeight
+        ? room
+        : Math.min(panelBottom + gap - window.innerHeight, Math.max(room, 0))
     if (Math.abs(distance) < 1) return
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
     window.scrollBy({ top: distance, behavior: reduceMotion ? "auto" : "smooth" })
@@ -218,18 +223,28 @@ export default function CompareSection({
               tabIndex={0}
               className={`rounded-xs ${focusRing}`}
             >
-              <dl className="grid grid-cols-5 gap-x-8">
+              {/* Every attribute is laid out in every column, stacked on one
+                  grid cell, so the row is always as tall as its tallest state
+                  and switching tabs never moves the page. Only the chosen
+                  attribute is visible, and only it reaches assistive tech. */}
+              <div className="grid grid-cols-5 gap-x-8">
                 {courses.map((course) => (
-                  <AttributeDetail
-                    key={course.slug}
-                    course={course}
-                    attribute={active}
-                    colon
-                    nameCourse
-                    className={columnRule}
-                  />
+                  <dl key={course.slug} className={`grid ${columnRule}`}>
+                    {attributes.map((attribute) => (
+                      <AttributeDetail
+                        key={attribute.key}
+                        course={course}
+                        attribute={attribute}
+                        colon
+                        nameCourse
+                        className={`col-start-1 row-start-1 ${
+                          attribute.key === active.key ? "" : "invisible"
+                        }`}
+                      />
+                    ))}
+                  </dl>
                 ))}
-              </dl>
+              </div>
             </div>
           </div>
 
