@@ -20,18 +20,18 @@ export default function EnterpriseAiCollectionPage() {
     <main className="flex-1">
       <Container>
         <Breadcrumb
-          parent={collection.breadcrumb.parent}
+          trail={collection.breadcrumb.trail}
           current={collection.breadcrumb.current}
         />
       </Container>
 
-      <Container className="lg:py-10">
-        <div className="lg:grid lg:grid-cols-[minmax(18rem,1fr)_minmax(0,780px)] lg:items-start lg:gap-x-8">
+      <Container className="desktop:py-10">
+        <div className="desktop:grid desktop:grid-cols-[minmax(18rem,1fr)_minmax(0,780px)] desktop:items-start desktop:gap-x-8">
           <div className={styles.stage}>
             <CollectionBlurb
               collection={collection}
               intro={collection.intro}
-              className="lg:max-w-96"
+              className="desktop:max-w-96"
             />
           </div>
 
@@ -39,12 +39,12 @@ export default function EnterpriseAiCollectionPage() {
               24px page gutter, with 32px above and below. */}
           <section
             aria-labelledby="collection-courses"
-            className="-mx-3 mt-6 py-8 lg:m-0 lg:p-0"
+            className="-mx-3 mt-6 py-8 desktop:m-0 desktop:p-0"
           >
             <h2 id="collection-courses" className="sr-only">
               Courses in this collection
             </h2>
-            <ol className="flex flex-col gap-4 lg:gap-8">
+            <ol className="flex flex-col gap-4 desktop:gap-8">
               {courses.map((course) => (
                 <CollectionItem key={course.slug} course={course} />
               ))}

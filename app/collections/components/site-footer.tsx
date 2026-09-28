@@ -50,7 +50,7 @@ export default function SiteFooter() {
   return (
     <footer className="bg-ink text-[#b1c0cf]">
       {/* Mobile: logo, links, contact details, then socials and legals. */}
-      <div className="pt-[35px] pb-[22px] lg:hidden">
+      <div className="pt-[35px] pb-[22px] desktop:hidden">
         <Logo className="mx-auto" />
         <div className="mt-[25px] pl-[15px] text-xs/[18px]">
           <SiteLinks />
@@ -69,7 +69,7 @@ export default function SiteFooter() {
       </div>
 
       {/* Desktop: links | centred branding | currency | contact, then legals. */}
-      <div className="hidden px-[75px] pt-[35px] pb-[31px] lg:block">
+      <div className="hidden px-[75px] pt-[35px] pb-[31px] desktop:block">
         <div className="flex h-[184px] items-start justify-between">
           <div className="w-[180px] text-sm/[21px]">
             <SiteLinks />

@@ -1,7 +1,11 @@
 import type { Metadata } from "next"
 import type { CSSProperties } from "react"
 import Breadcrumb from "../../components/breadcrumb"
-import { CheckBullets, NumberedBullets } from "../../components/bullets"
+import {
+  CheckBullets,
+  IconBullets,
+  NumberedBullets,
+} from "../../components/bullets"
 import CollectionBlurb from "../../components/collection-blurb"
 import CompareSection from "../../components/compare-section"
 import Container from "../../components/container"
@@ -23,7 +27,7 @@ import {
 } from "./data"
 
 export const metadata: Metadata = {
-  title: `${collection.breadcrumb.current} (version ii)`,
+  title: collection.breadcrumb.current,
   description: collection.intro,
 }
 
@@ -45,12 +49,12 @@ export default function EnterpriseAiCollectionPageV2() {
       <main className="flex-1" style={themeVars}>
         <Container>
           <Breadcrumb
-            parent={collection.breadcrumb.parent}
+            trail={collection.breadcrumb.trail}
             current={collection.breadcrumb.current}
           />
         </Container>
 
-        <Container className="py-6 lg:py-8">
+        <Container className="py-6 desktop:py-8">
           <CollectionBlurb
             collection={collection}
             intro={collection.intro}
@@ -79,12 +83,13 @@ export default function EnterpriseAiCollectionPageV2() {
           courses={courses}
         />
 
-        <PageSection title={faq.title} layout="prose">
+        {/* The FAQ carries its own 84px marker gutter, like the bullet lists. */}
+        <PageSection title={faq.title}>
           <FaqList items={faq.items} />
         </PageSection>
 
         <PageSection title={whyDifferent.title} last>
-          <NumberedBullets items={whyDifferent.items} />
+          <IconBullets items={whyDifferent.items} />
         </PageSection>
       </main>
       <SiteFooter />

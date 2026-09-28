@@ -10,12 +10,22 @@ import type {
   Bullet,
   CollectionCourse,
   CompareAttribute,
+  IconBullet,
   SpringboardCourse,
 } from "../../types"
-import { collection, courses as baseCourses } from "../data"
+import { collection as base, courses as baseCourses } from "../data"
 
-export { collection }
 export type { CompareAttribute, SpringboardCourse } from "../../types"
+
+/** The version-ii page names the collection "AI for Executives" (node 1128-34552). */
+export const collection = {
+  ...base,
+  kicker: "AI for Executives",
+  breadcrumb: {
+    trail: ["Home", "Categories", "Artificial Intelligence"],
+    current: "AI for Executives",
+  },
+}
 
 export const compareAttributes: CompareAttribute[] = [
   { key: "challenge", label: "Business challenge" },
@@ -168,12 +178,12 @@ export const faq = {
     {
       question: "What are the best AI courses for leaders?",
       answer:
-        "The best ai courses for business leaders prioritize organizational change and governance over technical coding. Evaluating the best ai for business course comes down to whether it moves your ai strategy for business leaders from hype to impact by delivering tailored roadmaps, business cases, and scalable operating models.",
+        "The best AI courses for business leaders prioritize organizational change and governance over technical coding. Evaluating the best ai for business course comes down to whether it moves your ai strategy for business leaders from hype to impact by delivering tailored roadmaps, business cases, and scalable operating models.",
     },
     {
-      question: "What is the 10/20-70 rule for AI?",
+      question: "What is the 10–20–70 rule for AI?",
       answer:
-        "The 10/20/-70 rule indicates that successful AI transformation relies 10% on algorithms, 20% on technology infrastructure, and 70% on business process redesign, cultural adoption, and people leadership. Most enterprise efforts stall because leadership focuses entirely on technical tooling while ignoring the organizational change required to realize value.",
+        "The 10–20–70 rule indicates that successful AI transformation relies 10% on algorithms, 20% on technology infrastructure, and 70% on business process redesign, cultural adoption, and people leadership. Most enterprise efforts stall because leadership focuses entirely on technical tooling while ignoring the organizational change required to realize value.",
     },
     {
       question: "What businesses will benefit most from AI?",
@@ -183,15 +193,30 @@ export const faq = {
   ],
 }
 
-export const whyDifferent = {
+export const whyDifferent: { title: string; items: IconBullet[] } = {
   // The desktop frame reads "Why these aren't like other online courses"; the
   // mobile frame carries the fuller, later copy used here.
   title: "Why these aren't like other online AI business courses?",
   items: [
-    "Learn from, and alongside a global network of senior working professionals, subject matter experts, and world-class faculty.",
-    "Designed to challenge you, but built around your working life, one module a week, moving with your cohort, on your own time.",
-    "Leave with more than knowledge - build practical strategies, roadmaps, and plans for your own context, ready to put to work in your career or business.",
-    "Earn a credential from MIT Sloan that signals what you can actually do, earned through assignments graded by subject matter experts, from a world-leading university.",
-    "Enterprise-ready: Develop your team together, in the same cohort, on the same timeline, building shared language, shared frameworks, and outcomes that compound across the organisation.",
+    {
+      icon: "users",
+      text: "Learn from, and alongside a global network of senior working professionals, subject matter experts, and world-class faculty.",
+    },
+    {
+      icon: "calendar",
+      text: "Designed to challenge you, but built around your working life, one module a week, moving with your cohort, on your own time.",
+    },
+    {
+      icon: "briefcase-business",
+      text: "Leave with more than knowledge - build practical strategies, roadmaps, and plans for your own context, ready to put to work in your career or business.",
+    },
+    {
+      icon: "award",
+      text: "Earn a credential from MIT Sloan that signals what you can actually do, earned through assignments graded by subject matter experts, from a world-leading university.",
+    },
+    {
+      icon: "building",
+      text: "Enterprise-ready: Develop your team together, in the same cohort, on the same timeline, building shared language, shared frameworks, and outcomes that compound across the organisation.",
+    },
   ],
 }

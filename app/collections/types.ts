@@ -1,5 +1,7 @@
 /** Shared shapes for the hi-fi collection pages and their components. */
 
+import type { BulletIconName } from "./components/bullet-icons"
+
 export type CollectionCourse = {
   slug: string
   title: string
@@ -42,3 +44,6 @@ export type SpringboardCourse = CollectionCourse & {
 
 /** A checked point: an optional bold lead-in, then the rest of the sentence. */
 export type Bullet = { lead?: string; rest: string }
+
+/** A point marked with a lucide icon. */
+export type IconBullet = { icon: BulletIconName; text: string }

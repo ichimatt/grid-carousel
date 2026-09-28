@@ -34,7 +34,7 @@ export default function CollectionBlurb({
         <span>{collection.courseCount}</span>
       </p>
       <h1
-        className={`text-[26px]/9 font-semibold tracking-[-0.26px] text-balance lg:text-[37px]/12 lg:tracking-[-0.46px] ${wide ? "max-w-[1024px]" : ""}`}
+        className={`text-[26px]/9 font-semibold tracking-[-0.26px] text-balance desktop:text-[37px]/12 desktop:tracking-[-0.46px] ${wide ? "max-w-[1024px]" : ""}`}
       >
         {collection.title}
       </h1>

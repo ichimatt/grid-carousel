@@ -11,7 +11,7 @@
   --stage-max: 94px;
 }
 
-@media (width >= 64rem) {
+@media (width >= 65rem) {
   .stage {
     position: sticky;
     top: calc(var(--header-h) + 2.5rem);

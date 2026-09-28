@@ -88,3 +88,12 @@ body {
   --color-button-inverse-hover: #f6f8fb;
   --shadow-elevation-3: 0 8px 10px 0 rgba(30, 33, 37, 0.1);
 }
+
+/* Collection page breakpoints from the Figma responsiveness guideline:
+   the stacked layout ends at 650px, where the course card and explainer
+   sit side by side in a centred 672px column, and the 12-column desktop
+   layout begins at 1040px. */
+@theme {
+  --breakpoint-tablet: 40.625rem;
+  --breakpoint-desktop: 65rem;
+}

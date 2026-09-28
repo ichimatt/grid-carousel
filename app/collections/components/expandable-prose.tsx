@@ -7,7 +7,7 @@ import { focusRing } from "./focus-ring"
 const LINES = 5
 
 /**
- * Body copy that shows every paragraph on desktop but collapses below lg to
+ * Body copy that shows every paragraph on desktop but collapses below it to
  * the first paragraph ending in "… more". When that paragraph runs past
  * five lines it is clamped by the browser (so the cut is always on a line
  * boundary) and the toggle sits over the end of the last line behind a
@@ -22,6 +22,9 @@ export default function ExpandableProse({ paragraphs }: { paragraphs: string[] }
   const [overflows, setOverflows] = useState(true)
   const id = useId()
   const boxRef = useRef<HTMLDivElement>(null)
+  const toggleRef = useRef<HTMLButtonElement>(null)
+  // True between a toggle press and the render that follows it.
+  const toggledRef = useRef(false)
   const [first, ...rest] = paragraphs
 
   useEffect(() => {
@@ -40,15 +43,27 @@ export default function ExpandableProse({ paragraphs }: { paragraphs: string[] }
     return () => observer.disconnect()
   }, [])
 
+  // The toggle moves between the clamped overlay, the first paragraph and
+  // the last one, so React remounts it; put focus back on it afterwards.
+  useEffect(() => {
+    if (!toggledRef.current) return
+    toggledRef.current = false
+    toggleRef.current?.focus({ preventScroll: true })
+  }, [expanded])
+
   const clamped = !expanded && overflows
   const toggle = (
     <button
+      ref={toggleRef}
       type="button"
       aria-expanded={expanded}
       aria-controls={id}
       aria-label={expanded ? "Show less" : "Show more"}
-      onClick={() => setExpanded((open) => !open)}
-      className={`rounded-xs text-link-subtle hover:underline lg:hidden ${focusRing}`}
+      onClick={() => {
+        toggledRef.current = true
+        setExpanded((open) => !open)
+      }}
+      className={`rounded-xs text-link-subtle hover:underline desktop:hidden ${focusRing}`}
     >
       {expanded ? "less" : "more"}
     </button>
@@ -59,7 +74,7 @@ export default function ExpandableProse({ paragraphs }: { paragraphs: string[] }
       <div
         ref={boxRef}
         id={id}
-        className={clamped ? "line-clamp-5 lg:line-clamp-none" : ""}
+        className={clamped ? "line-clamp-5 desktop:line-clamp-none" : ""}
       >
         <p>
           {first}
@@ -68,7 +83,7 @@ export default function ExpandableProse({ paragraphs }: { paragraphs: string[] }
         {rest.map((paragraph, index) => (
           <p
             key={paragraph}
-            className={`mt-4 ${expanded ? "" : "hidden lg:block"}`}
+            className={`mt-4 ${expanded ? "" : "hidden desktop:block"}`}
           >
             {paragraph}
             {expanded && index === rest.length - 1 && <> {toggle}</>}
@@ -78,7 +93,7 @@ export default function ExpandableProse({ paragraphs }: { paragraphs: string[] }
       {clamped && (
         // Pinned over the end of the fifth line; the fade hides the glyphs
         // the browser's own ellipsis would otherwise leave beside it.
-        <p className="absolute right-0 bottom-0 bg-white pl-2 before:absolute before:inset-y-0 before:right-full before:w-10 before:bg-linear-to-r before:from-transparent before:to-white lg:hidden">
+        <p className="absolute right-0 bottom-0 bg-white pl-2 before:absolute before:inset-y-0 before:right-full before:w-10 before:bg-linear-to-r before:from-transparent before:to-white desktop:hidden">
           <span aria-hidden="true">… </span>
           {toggle}
         </p>

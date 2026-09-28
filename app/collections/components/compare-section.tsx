@@ -59,10 +59,11 @@ function AttributeDetail({
 }
 
 /**
- * The "Compare" section (Figma 910:14371 desktop, 910:10863 mobile).
+ * The "Compare" section (Figma 1128:34686 desktop, 1128:34979 mobile).
  * Desktop: pill tabs pick one attribute, shown under all five courses at
- * once in a five-column table. Mobile: each course gets its own
- * horizontally scrolling strip of all four attributes, so no tabs.
+ * once in a five-column table. Below it: each course gets a bordered block
+ * with its own horizontally scrolling strip of all four attributes, so no
+ * tabs.
  */
 export default function CompareSection({
   title,
@@ -152,15 +153,16 @@ export default function CompareSection({
   return (
     <section aria-labelledby={headingId}>
       <Container>
-        <div className="border-t border-line pt-6 pb-8 lg:py-16">
-          {/* Title row: the copy and, from lg, the tabs bottom-aligned on
-              its right. Between lg and the width where both fit, the tabs
-              wrap onto their own line and stay right-aligned. */}
-          <div className="flex flex-col gap-6 lg:flex-row lg:flex-wrap lg:items-end lg:gap-x-2 lg:gap-y-4">
-            <div className="flex flex-col gap-6 lg:gap-0 lg:pb-1">
+        <div className="border-t border-line pt-8 pb-12 desktop:py-16">
+          {/* Title row: the copy and, on the desktop layout, the tabs
+              bottom-aligned on its right. The copy column gives way first,
+              so on narrow desktops the headline wraps beside the tabs as in
+              the guideline's 1044px frame. */}
+          <div className="flex flex-col gap-8 desktop:flex-row desktop:items-end desktop:gap-x-2">
+            <div className="flex flex-col gap-8 desktop:min-w-0 desktop:flex-1 desktop:gap-0 desktop:pb-1">
               <h2
                 id={headingId}
-                className="max-w-[304px] text-[23px]/8 font-semibold tracking-[-0.17px] text-balance lg:max-w-none"
+                className="max-w-[304px] text-[23px]/8 font-semibold tracking-[-0.17px] text-balance desktop:max-w-none"
               >
                 {title}
               </h2>
@@ -172,7 +174,7 @@ export default function CompareSection({
               role="tablist"
               aria-label="Compare by"
               onKeyDown={onTabKeyDown}
-              className="hidden gap-1 lg:ml-auto lg:flex"
+              className="hidden shrink-0 gap-1 desktop:flex"
             >
               {attributes.map((attribute, index) => {
                 const selected = index === activeIndex
@@ -205,7 +207,7 @@ export default function CompareSection({
           {/* Desktop table: two grids with the same five columns so the
               course row stretches to its tallest item and the value row
               lines up under it. */}
-          <div className="mt-8 hidden lg:block">
+          <div className="mt-8 hidden desktop:block">
             {/* role="list" keeps list semantics in Safari once list-style is removed. */}
             <ul role="list" className="grid grid-cols-5 gap-x-8">
               {courses.map((course) => (
@@ -248,50 +250,46 @@ export default function CompareSection({
             </div>
           </div>
 
-          {/* Mobile: one block per course bleeding to the viewport edges so
-              the attribute strip can run under the right-hand gutter. */}
-          <ul role="list" className="-mx-6 mt-6 flex flex-col gap-3 py-3 lg:hidden">
+          {/* Below the desktop layout: one bordered block per course (Figma
+              "comparison-block", 1128:35911) holding the course link and a
+              horizontally scrolling strip of fixed-width attribute cards. */}
+          <ul role="list" className="mt-8 flex flex-col gap-3 py-3 desktop:hidden">
             {courses.map((course) => (
-              <li key={course.slug} className="flex flex-col gap-3">
-                <div className="mx-6 border-t border-line" />
-                <div className="flex flex-col gap-3 bg-white px-5 pb-8">
+              <li
+                key={course.slug}
+                className="relative overflow-clip rounded-md border border-line bg-white pb-6"
+              >
+                <div className="p-4">
                   <ComparisonItem course={course} orientation="horizontal" />
-                  <div className="relative -mr-5">
-                    {/* The strip is a focusable region so keyboard users can
-                        scroll it; the scrollbar is hidden since the peeking
-                        next card already signals more content. */}
-                    <div
-                      role="region"
-                      tabIndex={0}
-                      aria-label={`${course.title} comparison`}
-                      onKeyDown={onStripKeyDown}
-                      // Inset ring: the strip runs to the viewport edge, so an
-                      // outer ring would be cut off on the right. The vertical
-                      // slack keeps the ring off the cards' rule and descenders,
-                      // and z-10 lifts it above the fade while focused.
-                      className={`relative -my-1 py-1 snap-x snap-mandatory overflow-x-auto [scrollbar-width:none] focus-visible:z-10 [&::-webkit-scrollbar]:hidden ${focusRing} focus-visible:ring-inset`}
-                    >
-                      {/* Cards are the block's content width minus a 31px
-                          peek of the next card (289px at 360): the list's
-                          pr-5 mirrors the bleed so the percentage resolves
-                          against 320, not the scroller's 340. The ::after
-                          spacer keeps the last card 20px off the edge when
-                          fully scrolled, since padding is not counted as
-                          scrollable overflow here. */}
-                      <dl className="flex gap-3 pr-5 after:w-2 after:shrink-0 after:content-['']">
-                        {attributes.map((attribute) => (
-                          <AttributeDetail
-                            key={attribute.key}
-                            course={course}
-                            attribute={attribute}
-                            className="w-[calc(100%-31px)] shrink-0 snap-start"
-                          />
-                        ))}
-                      </dl>
-                    </div>
-                    <div className="pointer-events-none absolute inset-y-0 right-0 w-4 bg-linear-to-r from-transparent to-white to-70%" />
-                  </div>
                 </div>
+                {/* The strip is a focusable region so keyboard users can
+                    scroll it; the scrollbar is hidden since the peeking
+                    next card already signals more content. An inset ring
+                    and a little vertical slack keep the focus ring clear of
+                    the block's border and the cards' text. */}
+                <div
+                  role="region"
+                  tabIndex={0}
+                  aria-label={`${course.title} comparison`}
+                  onKeyDown={onStripKeyDown}
+                  // scroll-ps-3 keeps the 12px lead-in out of the snap maths,
+                  // so the strip loads unscrolled and Home returns to it.
+                  className={`relative -my-1 snap-x snap-mandatory overflow-x-auto px-3 py-1 scroll-ps-3 [scrollbar-width:none] focus-visible:z-10 [&::-webkit-scrollbar]:hidden ${focusRing} focus-visible:ring-inset`}
+                >
+                  {/* Cards are a fixed 232px (the design's 975px strip of
+                      four) so the next one always peeks. */}
+                  <dl className="flex w-max gap-4">
+                    {attributes.map((attribute) => (
+                      <AttributeDetail
+                        key={attribute.key}
+                        course={course}
+                        attribute={attribute}
+                        className="w-[232px] shrink-0 snap-start"
+                      />
+                    ))}
+                  </dl>
+                </div>
+                <div className="pointer-events-none absolute inset-y-0 -right-px w-4 bg-linear-to-r from-transparent to-white to-70%" />
               </li>
             ))}
           </ul>

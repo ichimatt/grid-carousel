@@ -1,9 +1,10 @@
 import type { ReactNode } from "react"
-import type { Bullet } from "../types"
+import type { Bullet, IconBullet } from "../types"
+import BulletIcon from "./bullet-icons"
 
 /**
- * Bullet lists for the supporting sections (Figma "bullets"): one column on
- * small screens, two from md up. The design stacks each column
+ * Bullet lists for the supporting sections (Figma "bullets"): one column
+ * until the desktop layout, then two. The design stacks each column
  * independently (source order fills the first column, then the second),
  * which a grid cannot do without equalising row heights, so the list is a
  * two-column multicol with a forced break after the first half.
@@ -26,18 +27,18 @@ function BulletList({
     // role="list" keeps list semantics in Safari once list-style is removed.
     <List
       role="list"
-      className="flex flex-col gap-y-6 md:block md:columns-2 md:gap-x-8"
+      className="flex flex-col gap-y-6 desktop:block desktop:columns-2 desktop:gap-x-8"
     >
       {keys.map((key, index) => {
         const endsColumn = index === lastInFirstColumn || index === count - 1
         return (
           <li
             key={key}
-            className={`flex items-start pr-8 md:break-inside-avoid ${
+            className={`flex items-start pr-8 desktop:break-inside-avoid ${
               // The last item of each column carries no trailing margin, or
               // the taller column would end 32px below its text.
-              endsColumn ? "" : "md:mb-8"
-            } ${index === lastInFirstColumn ? "md:break-after-column" : ""}`}
+              endsColumn ? "" : "desktop:mb-8"
+            } ${index === lastInFirstColumn ? "desktop:break-after-column" : ""}`}
           >
             <span className="shrink-0 px-7">
               <span className="block px-0.5">{renderMarker(index)}</span>
@@ -101,6 +102,20 @@ export function CheckBullets({ items }: { items: Bullet[] }) {
           </>
         )
       }}
+    />
+  )
+}
+
+/** Points marked with a themed lucide icon instead of a number. */
+export function IconBullets({ items }: { items: IconBullet[] }) {
+  return (
+    <BulletList
+      as="ul"
+      keys={items.map((item) => item.text)}
+      renderMarker={(index) => (
+        <BulletIcon name={items[index].icon} className="block text-(--theme-color)" />
+      )}
+      renderText={(index) => items[index].text}
     />
   )
 }
