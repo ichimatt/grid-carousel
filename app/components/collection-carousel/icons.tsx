@@ -18,6 +18,9 @@ function Icon({
       viewBox={`0 0 ${size} ${size}`}
       fill="none"
       stroke="currentColor"
+      // lucide draws a 2-unit stroke on a 24-unit grid, so the width scales
+      // with the icon: 1.33px at 16px, 1.67px at 20px.
+      strokeWidth={size / 12}
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"

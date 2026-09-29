@@ -1,0 +1,205 @@
+/* The carousel responds to its own width, so the mobile rail and the paged
+   desktop treatment can sit side by side on one review page. */
+.root {
+  container-type: inline-size;
+}
+
+/* --spv is how many cards are visible across the track, --gaps how many gaps
+   sit inside that view and --gap the gap itself (the track's flex gap reads
+   it too, so the layout and the card-width maths can't drift apart). On the
+   rail the cards stand
+   upright with 12px gaps and --spv is fractional so half of the next card
+   always peeks. From 64rem the cards turn on their side with 32px gaps and
+   fill the 1360px content width: two per page, and three from 82rem, the
+   width at which each card keeps at least 400px (so its copy column keeps
+   about 170px; the design's 432px card is the 1360px content width shared
+   three ways). --page is how many cards the dots and arrows step by: one on
+   the rail, a full row on desktop. Declared here rather than as utility
+   variants so the breakpoints cascade in size order. */
+.track {
+  --spv: 1.5;
+  --gaps: 1;
+  --gap: 0.75rem;
+  --page: 1;
+  /* The rail's 24px right padding is visible area too, so it counts toward
+     the view when sizing cards; the desktop scroller has no visible padding. */
+  --visible-padding: 1.5rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.track::-webkit-scrollbar {
+  display: none;
+}
+
+@container (min-width: 36rem) {
+  .track {
+    --spv: 2.5;
+    --gaps: 2;
+  }
+}
+
+@container (min-width: 56rem) {
+  .track {
+    --spv: 3.5;
+    --gaps: 3;
+  }
+}
+
+@container (min-width: 64rem) {
+  .track {
+    --spv: 2;
+    --gaps: 1;
+    --gap: 2rem;
+    --page: 2;
+    --visible-padding: 0rem;
+  }
+}
+
+@container (min-width: 82rem) {
+  .track {
+    --spv: 3;
+    --gaps: 2;
+    --page: 3;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .track {
+    scroll-behavior: smooth;
+  }
+}
+
+/* The graphic takes the collection's ramp: hairlines and hollow dots in
+   theme-500, solid dots in theme-300, and the faint guides in theme-700
+   raised from 7% to 69% so they still read on the dark tile. */
+.hero {
+  color: var(--ramp-500);
+  --hollow-color: var(--ramp-500);
+  --dot-color: var(--ramp-300);
+  --guide-color: var(--ramp-700);
+  --graphic-faint-opacity: 0.69;
+}
+
+/* Hairlines stay 1px however far the graphic is scaled up. */
+.graphic :is(path, circle) {
+  vector-effect: non-scaling-stroke;
+  stroke-width: var(--graphic-stroke-width, 1px);
+}
+
+/* Card states. The design draws none for the solid card, so these follow
+   the light tile's: hover and focus lift the shadow to elevation-2 and
+   brighten the course-count row (to white on the dark tile); focus adds a
+   2px ring 1px outside the card. data-state forces a look for documentation. */
+.card {
+  transition: box-shadow 150ms ease;
+}
+
+.card:hover,
+.card:focus-visible,
+.card[data-state="hover"],
+.card[data-state="focus"] {
+  box-shadow: var(--shadow-elevation-2);
+}
+
+.card:hover .link,
+.card:focus-visible .link,
+.card[data-state="hover"] .link,
+.card[data-state="focus"] .link {
+  color: var(--color-white);
+}
+
+.card:focus-visible,
+.card[data-state="focus"] {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 1px;
+}
+
+/* The server can't know how many cards fit, so above 64rem the paging
+   controls (rendered for the rail, one dot per card) stay invisible until
+   the first measurement replaces them. The row keeps its height throughout,
+   so nothing below the carousel moves when the page hydrates. Below 64rem
+   the server-rendered row is already right. */
+@container (min-width: 64rem) {
+  .root:not([data-measured]) .controls {
+    visibility: hidden;
+  }
+}
+
+/* player-control states from the library, on this white section: white at
+   rest, sunken on hover, a line-colour border when pressed, and on focus a
+   2px ring held 1px off the control by a white gap. Only the icon dims when
+   disabled. */
+.control {
+  background: var(--color-white);
+  color: var(--color-ink-secondary);
+  transition: background-color 150ms ease, color 150ms ease, box-shadow 150ms ease;
+}
+
+.control:not([aria-disabled="true"]):hover,
+.control:not([aria-disabled="true"]):active,
+.control:focus-visible {
+  background: var(--color-sunken);
+  color: var(--color-ink);
+}
+
+.control:not([aria-disabled="true"]):active {
+  box-shadow: inset 0 0 0 1px var(--color-line);
+}
+
+.control:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 1px var(--color-white),
+    0 0 0 3px var(--color-focus-ring);
+}
+
+.control:not([aria-disabled="true"]),
+.dot {
+  cursor: pointer;
+}
+
+.control[aria-disabled="true"] {
+  cursor: default;
+}
+
+.control[aria-disabled="true"] svg {
+  opacity: 0.5;
+}
+
+/* indicator-dot states: inactive dots rise from 25% to 50% on hover or
+   focus, the active dot never changes fill, and focus rings any dot 3px out.
+   Dots reach outside their 10px box for a comfortable hit area. */
+.dot {
+  overflow: visible;
+  background: color-mix(in srgb, var(--color-ink) 25%, transparent);
+  transition: background-color 150ms ease;
+}
+
+.dot:hover,
+.dot:focus-visible {
+  background: color-mix(in srgb, var(--color-ink) 50%, transparent);
+}
+
+.dot[aria-current="true"] {
+  background: var(--color-ink);
+}
+
+.dot:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 3px;
+}
+
+@media (forced-colors: active) {
+  .dot {
+    border: 1px solid ButtonText;
+  }
+
+  .dot[aria-current="true"] {
+    forced-color-adjust: none;
+    background: Highlight;
+  }
+}

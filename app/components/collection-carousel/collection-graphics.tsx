@@ -2,8 +2,10 @@ import type { SVGProps } from "react"
 
 /**
  * Decorative collection illustrations from the Figma library, inlined so they
- * theme at runtime: hairlines and solid dots take currentColor (the slide
- * sets it to its --theme-color), hollow dots fill with --hollow-color.
+ * theme at runtime. Hairlines take currentColor (a host sets it to its theme
+ * colour); solid dots take --dot-color and guide lines --guide-color, both
+ * defaulting to currentColor; hollow dots fill with --hollow-color (white by
+ * default); guides are drawn at --graphic-faint-opacity (7% by default).
  * Geometry is the library's 679-unit artboard; the carousel scales it and
  * keeps hairlines at 1px with vector-effect.
  */
@@ -15,19 +17,28 @@ export type GraphicName =
   | "healthcare"
   | "equaliser"
 
-/** Figma token graphic-faint-opacity (7%). */
-const FAINT = 0.07
-/** Figma token hollow-color. */
+/**
+ * Figma token graphic-faint-opacity: 7% on the light tiles. A host can raise
+ * it (the dark solid tiles use 69%) so the guides still read on its ground.
+ */
+const FAINT = "var(--graphic-faint-opacity, 0.07)"
+/** Figma token hollow-color: the hollow dots' fill. */
 const HOLLOW = "var(--hollow-color, #fff)"
+/** Solid dots take currentColor unless the host sets a lighter --dot-color. */
+const DOT = "var(--dot-color, currentColor)"
+/** Guide lines take currentColor unless the host sets a --guide-color. */
+const GUIDE = "var(--guide-color, currentColor)"
 
 function Dot({ cx, cy, hollow = false }: { cx: number; cy: number; hollow?: boolean }) {
-  return <circle cx={cx} cy={cy} r={8} fill={hollow ? HOLLOW : "currentColor"} />
+  // The library strokes every dot in its own fill colour, so a solid dot
+  // carries no ring of the hairline colour around it.
+  return <circle cx={cx} cy={cy} r={8} fill={hollow ? HOLLOW : DOT} stroke={hollow ? undefined : DOT} />
 }
 
 /** Faint guide lines that run out across the hero area. */
 function Guides({ lines }: { lines: string[] }) {
   return (
-    <g opacity={FAINT}>
+    <g stroke={GUIDE} style={{ opacity: FAINT }}>
       {lines.map((d) => (
         <path key={d} d={d} />
       ))}
@@ -72,7 +83,7 @@ const shapes: Record<GraphicName, () => React.ReactNode> = {
       <path d="M300.257 300.259L378.746 378.748" />
       <path
         d="M339.5 331.5C343.918 331.5 347.5 335.082 347.5 339.5C347.5 341.71 346.604 343.709 345.155 345.157L333.842 333.844C335.29 332.395 337.29 331.5 339.5 331.5Z"
-        fill="currentColor"
+        fill={DOT}
         stroke="none"
       />
     </>
@@ -123,8 +134,10 @@ const shapes: Record<GraphicName, () => React.ReactNode> = {
     <>
       <Guides lines={["M-0.5 339.5L679.5 339.5", "M339.5 -0.5L339.5 679.5"]} />
       <Dot cx={339.5} cy={339.5} hollow />
-      <circle cx={339.5} cy={339.5} r={27.5} />
-      <circle cx={339.5} cy={339.5} r={55.5} opacity={FAINT} />
+      {/* The library's inner ring is 21 by 20.5; a circle at 21 is within a
+          tenth of a pixel of it at card scale. */}
+      <circle cx={339.5} cy={339.5} r={21} />
+      <circle cx={339.5} cy={339.5} r={55.5} stroke={GUIDE} style={{ opacity: FAINT }} />
       <Dot cx={339.5} cy={299.5} />
       <Dot cx={339.5} cy={379.5} />
       <Dot cx={299.5} cy={339.5} />
