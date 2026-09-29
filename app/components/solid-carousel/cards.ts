@@ -49,11 +49,3 @@ export const solidCards: SolidCardData[] = [
   card("healthcare", "Cover medical school’s gaps", "5 courses", { tile: "#302a80", guide: "#3e438d", line: "#667bc8", dot: "#9cbdfe", kicker: "#e0ecfe" }),
   card("public-policy", "Move policy forward", "5 LSE courses", { tile: "#710801", guide: "#822d1d", line: "#bc6547", dot: "#f7aa84", kicker: "#fce6db" }),
 ]
-
-/** The placeholder the library component shows, used to document states. */
-export const sampleSolidCard: SolidCardData = {
-  ...solidCards[0],
-  slug: "sample",
-  title: "Course headline",
-  courseCount: "5 courses",
-}

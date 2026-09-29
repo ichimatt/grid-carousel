@@ -5,7 +5,6 @@ import type { SolidCardData } from "./cards"
 import styles from "./solid-carousel.module.css"
 
 export type SolidCardOrientation = "vertical" | "horizontal" | "responsive"
-export type SolidCardState = "hover" | "focus"
 
 /**
  * One collection card on a solid tile in the collection's colour (the
@@ -14,18 +13,15 @@ export type SolidCardState = "hover" | "focus"
  * "horizontal" sets them side by side in a row the 167px hero makes, as on
  * desktop; "responsive" is vertical until the nearest container reaches
  * 64rem, then horizontal. Hover lifts the shadow and brightens the
- * course-count row; keyboard focus adds the ring. `state` forces either
- * look for documentation.
+ * course-count row; keyboard focus adds the ring.
  */
 export default function SolidCard({
   card,
   orientation = "vertical",
-  state,
   className = "",
 }: {
   card: SolidCardData
   orientation?: SolidCardOrientation
-  state?: SolidCardState
   className?: string
 }) {
   const ramp = {
@@ -57,7 +53,6 @@ export default function SolidCard({
   return (
     <a
       href={card.href}
-      data-state={state}
       style={ramp}
       className={`${styles.card} flex w-full overflow-clip rounded-lg bg-(--ramp-800) text-white shadow-elevation-1 ${layout.card} ${className}`}
     >

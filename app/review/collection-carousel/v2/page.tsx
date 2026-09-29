@@ -1,6 +1,4 @@
 import type { Metadata } from "next"
-import { sampleSolidCard } from "../../../components/solid-carousel/cards"
-import SolidCard, { type SolidCardState } from "../../../components/solid-carousel/solid-card"
 import SolidCarousel from "../../../components/solid-carousel/solid-carousel"
 
 export const metadata: Metadata = {
@@ -11,12 +9,6 @@ export const metadata: Metadata = {
 const GUTTER = "px-6 lg:px-10"
 /** The design's line colour, separating an artboard from the page that shares its background. */
 const FRAME = "border-line"
-
-const cardStates: { name: string; state?: SolidCardState }[] = [
-  { name: "Default" },
-  { name: "Hover", state: "hover" },
-  { name: "Focus", state: "focus" },
-]
 
 export default function SolidCarouselReviewPage() {
   return (
@@ -32,44 +24,6 @@ export default function SolidCarouselReviewPage() {
           size.
         </p>
       </header>
-
-      <section aria-labelledby="card-states" className="flex flex-col gap-4">
-        <div className={`flex flex-wrap items-baseline gap-x-3 gap-y-1 ${GUTTER}`}>
-          <h2 id="card-states" className="text-lg/6 font-semibold">
-            Card states
-          </h2>
-          <p className="max-w-3xl text-sm/5 text-pretty text-ink-secondary">
-            Hover lifts the card and brightens the course count to white;
-            keyboard focus adds the ring. The design draws no states for the
-            solid card, so these follow the light tile&apos;s. The live cards
-            below respond to a real pointer and keyboard.
-          </p>
-        </div>
-        <div className={`flex flex-col gap-6 ${GUTTER}`}>
-          <div className="flex flex-col gap-3">
-            <h3 className="text-sm/5 font-medium">Upright, as on the mobile rail</h3>
-            <div className="flex flex-wrap gap-5">
-              {cardStates.map(({ name, state }) => (
-                <figure key={name} className="flex w-[216px] flex-col gap-3">
-                  <SolidCard card={sampleSolidCard} state={state} />
-                  <figcaption className="text-sm/5 text-ink-secondary">{name}</figcaption>
-                </figure>
-              ))}
-            </div>
-          </div>
-          <div className="flex flex-col gap-3">
-            <h3 className="text-sm/5 font-medium">On its side, as on desktop</h3>
-            <div className="flex flex-wrap gap-5">
-              {cardStates.map(({ name, state }) => (
-                <figure key={name} className="flex w-[432px] max-w-full flex-col gap-3">
-                  <SolidCard card={sampleSolidCard} orientation="horizontal" state={state} />
-                  <figcaption className="text-sm/5 text-ink-secondary">{name}</figcaption>
-                </figure>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
 
       <section aria-labelledby="artboard-mobile" className="flex flex-col gap-4">
         <div className={`flex flex-wrap items-baseline gap-x-3 gap-y-1 ${GUTTER}`}>

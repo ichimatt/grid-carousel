@@ -93,27 +93,22 @@
 /* Card states. The design draws none for the solid card, so these follow
    the light tile's: hover and focus lift the shadow to elevation-2 and
    brighten the course-count row (to white on the dark tile); focus adds a
-   2px ring 1px outside the card. data-state forces a look for documentation. */
+   2px ring 1px outside the card. */
 .card {
   transition: box-shadow 150ms ease;
 }
 
 .card:hover,
-.card:focus-visible,
-.card[data-state="hover"],
-.card[data-state="focus"] {
+.card:focus-visible {
   box-shadow: var(--shadow-elevation-2);
 }
 
 .card:hover .link,
-.card:focus-visible .link,
-.card[data-state="hover"] .link,
-.card[data-state="focus"] .link {
+.card:focus-visible .link {
   color: var(--color-white);
 }
 
-.card:focus-visible,
-.card[data-state="focus"] {
+.card:focus-visible {
   outline: 2px solid var(--color-focus-ring);
   outline-offset: 1px;
 }
