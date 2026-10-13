@@ -14,7 +14,7 @@ const FRAME = "border-line"
 
 const snippet = buildSnippet()
 
-/** A bare host document for the preview: the page background and Noto Sans, nothing else. */
+/** A bare host document for the preview: the homepage's white ground and Noto Sans, nothing else. */
 const previewDocument = `<!doctype html>
 <html lang="en">
 <head>
@@ -23,7 +23,7 @@ const previewDocument = `<!doctype html>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600&display=swap">
-<style>html, body { margin: 0; background: #f1f4f8; }</style>
+<style>html, body { margin: 0; background: #ffffff; }</style>
 </head>
 <body>
 ${snippet}
@@ -69,6 +69,10 @@ export default function CollectionTilesSnippetPage() {
             <code className="font-mono">gsct-</code> and nothing leaks outside
             the block.
           </li>
+          <li>
+            The arrows are styled for the homepage&apos;s white ground (the
+            library&apos;s onSunken=false): white at rest, sunken on hover.
+          </li>
         </ul>
       </section>
 
@@ -78,8 +82,9 @@ export default function CollectionTilesSnippetPage() {
             Live preview
           </h2>
           <p className="max-w-3xl text-sm/5 text-pretty text-ink-secondary">
-            The snippet below, running in its own document. Full width first,
-            then in a 360px frame. Resize the window to see it reflow.
+            The snippet below, running in its own document on a white ground
+            like the homepage. Full width first, then in a 360px frame. Resize
+            the window to see it reflow.
           </p>
         </div>
         <div className={`border-y ${FRAME}`}>

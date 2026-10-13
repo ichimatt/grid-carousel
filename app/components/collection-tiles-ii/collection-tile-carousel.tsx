@@ -34,6 +34,12 @@ export type CollectionTileCarouselProps = {
   /** Accessible name for the carousel region. */
   label?: string
   labels?: CollectionTileCarouselLabels
+  /**
+   * The library's onSunken property: whether the carousel sits on the sunken
+   * page ground (the review frames) or on white (the homepage). It only
+   * changes the arrows' fills.
+   */
+  onSunken?: boolean
 }
 
 const defaultLabels = {
@@ -101,6 +107,7 @@ export default function CollectionTileCarousel({
   items = collectionTiles,
   label = "Course collections",
   labels,
+  onSunken = true,
 }: CollectionTileCarouselProps) {
   const id = useId()
   const trackId = `${id}track`
@@ -319,6 +326,7 @@ export default function CollectionTileCarousel({
       data-measured={measured || undefined}
       // Lets the stylesheet drop the dots where this many tiles fit one page.
       data-count={count === 2 ? "two" : count === 3 ? "three" : "many"}
+      data-ground={onSunken ? "sunken" : "white"}
       className={`${styles.root} font-noto text-ink`}
     >
       {/* Rhythm from the frames: 24px above the tiles, 32px between them and

@@ -45,7 +45,7 @@ export default function SnippetPreview({
       title={title}
       srcDoc={doc}
       style={{ width: width ?? "100%", height }}
-      className="block max-w-full border-0 bg-sunken"
+      className="block max-w-full border-0 bg-white"
     />
   )
 }

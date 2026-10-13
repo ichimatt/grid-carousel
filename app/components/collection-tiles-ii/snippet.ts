@@ -385,7 +385,7 @@ const script = String.raw`
 })();
 `.trim()
 
-/** The whole block, ready to paste. */
+/** The whole block, ready to paste. The homepage ground is white, so the arrows take the library's onSunken=false fills. */
 export function buildSnippet(items: CollectionTileData[] = collectionTiles): string {
   const count = items.length
   const trackId = `${PREFIX}-track`
@@ -402,7 +402,7 @@ ${baseStylesheet}
 
 ${scopedStylesheet()}
 </style>
-<section class="${PREFIX} ${cls("root")}" aria-roledescription="carousel" aria-label="Course collections" data-count="${dataCount}">
+<section class="${PREFIX} ${cls("root")}" aria-roledescription="carousel" aria-label="Course collections" data-count="${dataCount}" data-ground="white">
   <div class="${cls("body")}">
     <div class="${cls("controls")}">
       ${arrowMarkup("previous", trackId)}

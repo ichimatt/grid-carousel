@@ -437,11 +437,11 @@
   }
 }
 
-/* player-control states from the library on the sunken ground the frames
-   use: sunken at rest, white on hover, a line-colour border when pressed,
-   and on focus a 2px ring held 1px off the control by a sunken gap. Only
-   the icon dims at an end; the control stays focusable so keyboard users
-   don't lose their place. */
+/* player-control states from the library. On the sunken ground the frames
+   use (the library's onSunken=true): sunken at rest, white on hover, a
+   line-colour border when pressed, and on focus a 2px ring held 1px off the
+   control by a gap in the ground colour. Only the icon dims at an end; the
+   control stays focusable so keyboard users don't lose their place. */
 .control {
   cursor: pointer;
   background: var(--color-sunken);
@@ -473,6 +473,23 @@
 
 .control[aria-disabled="true"] svg {
   opacity: 0.5;
+}
+
+/* On a white ground (onSunken=false, the homepage) the two fills swap. */
+[data-ground="white"] .control {
+  background: var(--color-white);
+}
+
+[data-ground="white"] .control:not([aria-disabled="true"]):hover,
+[data-ground="white"] .control:not([aria-disabled="true"]):active,
+[data-ground="white"] .control:focus-visible {
+  background: var(--color-sunken);
+}
+
+[data-ground="white"] .control:focus-visible {
+  box-shadow:
+    0 0 0 1px var(--color-white),
+    0 0 0 3px var(--color-focus-ring);
 }
 
 /* ---------------------------------------------------------------------------
