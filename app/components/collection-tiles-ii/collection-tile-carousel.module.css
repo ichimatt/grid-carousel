@@ -368,10 +368,10 @@
   }
 
   /* The ghost button from the library: text in the theme colour on nothing
-     at rest; the card's hover and focus give it a theme-50 pill and ink
-     text. The library's pill is 4px wider on the left than the resting
-     button, so it is drawn by a pseudo-element reaching outside the box:
-     the layout never changes, and a headline on the brink of wrapping
+     at rest; the card's hover and focus put a theme-50 pill behind it (the
+     text keeps its colour). The pill is 4px wider on the left than the
+     resting button, so it is drawn by a pseudo-element reaching outside the
+     box: the layout never changes, and a headline on the brink of wrapping
      can't reflow while hovered. */
   .button {
     position: relative;
@@ -383,7 +383,6 @@
     padding: 0 0.75rem 0 1.25rem;
     font-weight: 500;
     color: var(--theme-text);
-    transition: color 150ms ease;
   }
 
   .button::before {
@@ -393,11 +392,6 @@
     z-index: -1;
     border-radius: 9999px;
     transition: background-color 150ms ease;
-  }
-
-  .tile:hover .button,
-  .tile:focus-visible .button {
-    color: var(--color-ink);
   }
 
   .tile:hover .button::before,
