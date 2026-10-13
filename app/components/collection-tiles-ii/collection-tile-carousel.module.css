@@ -1,0 +1,463 @@
+/* ---------------------------------------------------------------------------
+   Containers
+
+   The tile never measures the viewport. It reads the width of the nearest
+   container named "tile" (every slide is one, and so are the boxes on the
+   review page) and, for its landscape variants, the nearest container named
+   "desktop". The carousel names a slide "desktop" only once there is room
+   for landscape tiles, so on narrow screens a tile of any width stays
+   upright, as the design requires for mobile.
+   ------------------------------------------------------------------------ */
+
+.root {
+  container-type: inline-size;
+}
+
+.slide {
+  display: flex;
+  flex: none;
+  container-type: inline-size;
+  container-name: tile;
+  scroll-snap-align: start;
+}
+
+/* Boxes for showing a tile on its own at a chosen width. */
+.desktopBox {
+  container-type: inline-size;
+  container-name: tile desktop;
+}
+
+.mobileBox {
+  container-type: inline-size;
+  container-name: tile;
+}
+
+/* ---------------------------------------------------------------------------
+   Carousel
+
+   --fit is how many landscape tiles the content width could hold at the
+   416px the design draws them at: two from 856px of content, three from
+   1296px. The thresholds below add the 48px of gutters and the scroller's
+   own 24px of padding. --count is the number of tiles, set inline. Their
+   minimum is the number of columns and also the page size, which the script
+   reads; it is registered so the min() is resolved before it is read.
+   ------------------------------------------------------------------------ */
+
+@property --tile-cols {
+  syntax: "<integer>";
+  inherits: true;
+  initial-value: 1;
+}
+
+/* The rail: 24px gutters inside the scroller so tiles scroll through them,
+   fixed 216px upright tiles 24px apart, one dot per tile. The 12px of
+   vertical padding keeps shadows and focus rings from being clipped. */
+.track {
+  --count: 1;
+  --fit: 1;
+  --tile-cols: min(var(--count), var(--fit));
+  --gap: 1.5rem;
+  display: flex;
+  gap: var(--gap);
+  margin-block: -0.75rem;
+  padding: 0.75rem 1.5rem;
+  scroll-padding-inline: 1.5rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.track::-webkit-scrollbar {
+  display: none;
+}
+
+.track .slide {
+  width: 13.5rem;
+}
+
+/* Two upright tiles fit the rail from 504px and three from 744px (gutters,
+   tiles and gaps), so from there the server-rendered dots would only be
+   removed again once the script measures; dropping them here keeps the
+   page still. Three tiles need their dots back in two columns (two pages)
+   until three columns fit. */
+@container (min-width: 31.5rem) {
+  .root[data-count="two"] .controls {
+    display: none;
+  }
+}
+
+@container (min-width: 46.5rem) {
+  .root[data-count="three"] .controls {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .track {
+    scroll-behavior: smooth;
+  }
+}
+
+/* A single tile fills the content width (1360px at most) between 24px
+   gutters, upright until the carousel is 40rem wide, landscape from there. */
+.single {
+  padding-inline: 1.5rem;
+}
+
+.single .slide {
+  margin-inline: auto;
+  max-width: 85rem;
+}
+
+@container (min-width: 40rem) {
+  .single .slide {
+    container-name: tile desktop;
+  }
+}
+
+/* Columns: from 58rem two landscape tiles fit, so the gutters move outside
+   the scroller, which keeps a 12px margin of its own so shadows and focus
+   rings aren't clipped at the edges, and the tiles share a 1360px content
+   width in as many columns as fit (never more than the design's three). The
+   next page's first tile starts a full 24px gap beyond the edge, so it stays
+   hidden behind that margin. */
+@container (min-width: 58rem) {
+  .runway {
+    padding-inline: 1.5rem;
+  }
+
+  .track {
+    --fit: 2;
+    margin-inline: auto;
+    max-width: calc(85rem + 1.5rem);
+    padding-inline: 0.75rem;
+    scroll-padding-inline: 0.75rem;
+  }
+
+  .track .slide {
+    width: calc((100% - (var(--tile-cols) - 1) * var(--gap)) / var(--tile-cols));
+    container-name: tile desktop;
+  }
+
+  /* The server renders one dot per tile for the rail; here the page count
+     waits for the first measurement, with the row keeping its height. Three
+     tiles make two pages of two columns, so their dots return. */
+  .root:not([data-measured]) .controls {
+    visibility: hidden;
+  }
+
+  .root[data-count="three"] .controls {
+    display: flex;
+  }
+}
+
+@container (min-width: 85.5rem) {
+  .track {
+    --fit: 3;
+  }
+
+  /* Three tiles fit one page from here. */
+  .root[data-count="three"] .controls {
+    display: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Tile: upright (the base), then each wider variant in turn
+   ------------------------------------------------------------------------ */
+
+.tile {
+  display: flex;
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 1.5rem;
+  background: var(--color-white);
+  box-shadow: var(--shadow-elevation-outlined-1);
+  transition: box-shadow 150ms ease;
+}
+
+/* The tinted frame inside the card: a radial wash of the collection's
+   theme-50 from the top-left corner, with a 1px inset hairline of the same. */
+.inner {
+  display: flex;
+  flex: 1 1 0;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-bottom: 1.5rem;
+  border-radius: 0.75rem;
+  overflow: clip;
+  background: radial-gradient(190px at 42px 43px, var(--theme-bg), var(--color-white) 76%);
+  box-shadow: inset 0 0 0 1px var(--theme-bg);
+}
+
+.hero {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-inline: 1rem;
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.kicker {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: var(--theme-text);
+}
+
+.divider {
+  display: none;
+}
+
+.headline {
+  font-size: 1.125rem;
+  line-height: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.09px;
+  text-wrap: pretty;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: var(--color-ink-tertiary);
+  transition: color 150ms ease;
+}
+
+.chevron {
+  position: relative;
+  top: 1px;
+  flex: none;
+}
+
+.button {
+  display: none;
+}
+
+/* portrait-fullwidth: the upright tile given the whole mobile width. */
+@container tile (min-width: 17.5rem) {
+  .inner {
+    gap: 0.5rem;
+    background: radial-gradient(272px 193px at 60px 44px, var(--theme-bg), var(--color-white) 76%);
+  }
+
+  .hero {
+    padding: 1.25rem 2rem;
+  }
+
+  .copy {
+    padding-inline: 2rem;
+  }
+}
+
+/* landscape: graphic on the left, copy beside it. */
+@container desktop (min-width: 26rem) {
+  .inner {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding-bottom: 0;
+    background: radial-gradient(140px at 3px 4px, var(--theme-bg), var(--color-white));
+  }
+
+  .hero {
+    flex: none;
+    align-items: flex-start;
+    padding: 1rem;
+  }
+
+  .copy {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 1rem 1rem 1rem 0;
+  }
+
+  .headline {
+    text-wrap: balance;
+  }
+}
+
+/* landscape-wider: the course count moves to the right of the headline. */
+@container desktop (min-width: 37.5rem) {
+  .inner {
+    align-items: center;
+    gap: 1rem;
+    background: radial-gradient(189px at 5px 4px, var(--theme-bg) 20%, var(--color-white));
+  }
+
+  .hero {
+    padding: 1.25rem;
+  }
+
+  .copy {
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 2rem 2.5rem 2rem 0;
+  }
+
+  .heading {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .link {
+    flex: none;
+  }
+}
+
+/* landscape-fullwidth: everything on one line, with a call to action. */
+@container desktop (min-width: 60rem) {
+  .inner {
+    background: radial-gradient(344px 189px at 10px 4px, var(--theme-bg) 29%, var(--color-white));
+  }
+
+  .hero {
+    padding: 1.25rem 1.75rem;
+  }
+
+  .copy {
+    align-items: center;
+    padding: 1.75rem 3rem 1.75rem 0;
+  }
+
+  .heading {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 0.875rem;
+  }
+
+  .kicker,
+  .divider,
+  .headline {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    letter-spacing: -0.1px;
+  }
+
+  .kicker {
+    white-space: nowrap;
+  }
+
+  .divider {
+    display: block;
+    color: var(--theme-text);
+  }
+
+  .link {
+    gap: 1.5rem;
+  }
+
+  .chevron {
+    display: none;
+  }
+
+  /* The ghost button from the library: text in the theme colour on nothing
+     at rest; the card's hover and focus give it a theme-50 pill and ink
+     text. The library's pill is 4px wider on the left than the resting
+     button, so it is drawn by a pseudo-element reaching outside the box:
+     the layout never changes, and a headline on the brink of wrapping
+     can't reflow while hovered. */
+  .button {
+    position: relative;
+    isolation: isolate;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    height: 3rem;
+    padding: 0 0.75rem 0 1.25rem;
+    font-weight: 500;
+    color: var(--theme-text);
+    transition: color 150ms ease;
+  }
+
+  .button::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 0 -0.25rem;
+    z-index: -1;
+    border-radius: 9999px;
+    transition: background-color 150ms ease;
+  }
+
+  .tile:hover .button,
+  .tile:focus-visible .button {
+    color: var(--color-ink);
+  }
+
+  .tile:hover .button::before,
+  .tile:focus-visible .button::before {
+    background: var(--theme-bg);
+  }
+}
+
+/* Tile states from the overview: hover and focus lift the shadow to the
+   outlined elevation-2 and colour the course count with the theme; focus
+   adds a 2px ring 1px outside the card, following its radius. */
+.tile:hover,
+.tile:focus-visible {
+  box-shadow: var(--shadow-elevation-outlined-2);
+}
+
+.tile:hover .link,
+.tile:focus-visible .link {
+  color: var(--theme-text);
+}
+
+.tile:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 1px;
+}
+
+/* ---------------------------------------------------------------------------
+   Indicator dots: inactive dots rise from 25% to 50% on hover or focus, the
+   active dot never changes fill, and focus rings any dot 3px out. Dots reach
+   outside their 10px box for a comfortable hit area.
+   ------------------------------------------------------------------------ */
+
+.dot {
+  overflow: visible;
+  cursor: pointer;
+  background: color-mix(in srgb, var(--color-ink) 25%, transparent);
+  transition: background-color 150ms ease;
+}
+
+.dot:hover,
+.dot:focus-visible {
+  background: color-mix(in srgb, var(--color-ink) 50%, transparent);
+}
+
+.dot[aria-current="true"] {
+  background: var(--color-ink);
+}
+
+.dot:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 3px;
+}
+
+@media (forced-colors: active) {
+  .dot {
+    border: 1px solid ButtonText;
+  }
+
+  .dot[aria-current="true"] {
+    forced-color-adjust: none;
+    background: Highlight;
+  }
+}

@@ -58,6 +58,9 @@ body {
   --color-focus-ring: #1794ff;
   --shadow-elevation-1: 0 2px 4px 0 rgba(30, 33, 37, 0.1);
   --shadow-elevation-2: 0 4px 8px 0 rgba(30, 33, 37, 0.1);
+  /* The outlined elevations add a 1px hairline at 4% to the same shadows. */
+  --shadow-elevation-outlined-1: 0 0 0 1px rgba(30, 33, 37, 0.04), 0 2px 4px 0 rgba(30, 33, 37, 0.1);
+  --shadow-elevation-outlined-2: 0 0 0 1px rgba(30, 33, 37, 0.04), 0 4px 8px 0 rgba(30, 33, 37, 0.1);
 }
 
 /* Hi-fi collection page tokens: tertiary ink for card metadata and the
