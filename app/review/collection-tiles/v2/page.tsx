@@ -26,7 +26,7 @@ const variants = [
 const counts = [
   { name: "One tile", items: collectionTiles.slice(0, 1), note: "Upright and full width until 640px, then landscape, growing into the wider and full-width layouts at 648px and 1008px." },
   { name: "Two tiles", items: collectionTiles.slice(0, 2), note: "A rail until 928px, where two landscape tiles fit side by side; they turn wider from 1296px." },
-  { name: "Three or more", items: collectionTiles, note: "A rail until 928px, then two per page, and three per page from 1368px. The dots count pages." },
+  { name: "Three or more", items: collectionTiles, note: "A rail until 928px, then two per page, and three per page from 1368px, with arrows and a dot per page." },
 ]
 
 export default function CollectionTilesReviewPage() {
@@ -122,9 +122,10 @@ export default function CollectionTilesReviewPage() {
           <p className="max-w-3xl text-sm/5 text-pretty text-ink-secondary">
             Full width · Resize the window to see each reflow. The carousel
             counts how many landscape tiles its content width could hold at
-            416px and lays out that many columns, never more than three; below
-            that it is the mobile rail. Each tile then picks its variant from
-            the width it ends up with.
+            416px and lays out that many columns, never more than three, with
+            arrows beside the dots; below that it is the mobile rail, dots
+            only. Each tile then picks its variant from the width it ends up
+            with.
           </p>
         </div>
         <div className="flex flex-col gap-8">

@@ -10,12 +10,15 @@ import {
   useState,
   type CSSProperties,
 } from "react"
+import { ControlChevronLeftIcon, ControlChevronRightIcon } from "../collection-carousel/icons"
 import { getPositions, nearestIndex, resolveIndex } from "../scroll-geometry"
 import CollectionTile from "./collection-tile"
 import styles from "./collection-tile-carousel.module.css"
 import { collectionTiles, type CollectionTileData } from "./tiles"
 
 export type CollectionTileCarouselLabels = {
+  previous?: string
+  next?: string
   pages?: string
   /** aria-label for a dot when every page is one tile. */
   tile?: (index: number, count: number, title: string) => string
@@ -34,6 +37,8 @@ export type CollectionTileCarouselProps = {
 }
 
 const defaultLabels = {
+  previous: "Previous page",
+  next: "Next page",
   pages: "Choose a page",
   tile: (index: number, count: number, title: string) =>
     `Go to tile ${index + 1} of ${count}: ${title}`,
@@ -87,10 +92,10 @@ function getLayout(track: HTMLElement): Layout {
  * to its own width and to how many tiles it holds. One tile simply fills
  * the content width, upright until 40rem and landscape beyond. Two or more
  * tiles ride a rail of fixed upright tiles on the 24px gutter, one dot per
- * tile, until two landscape tiles fit (58rem); from there the tiles share
- * the 1360px content width in two columns, and in three from 85.5rem, with
- * a dot per page. Each tile picks its own variant from the width it ends up
- * with. There are no arrows and no auto-rotation.
+ * tile and no arrows, until two landscape tiles fit (58rem); from there the
+ * tiles share the 1360px content width in two columns, and in three from
+ * 85.5rem, with arrows and a dot per page. Each tile picks its own variant
+ * from the width it ends up with. There is no auto-rotation.
  */
 export default function CollectionTileCarousel({
   items = collectionTiles,
@@ -116,6 +121,10 @@ export default function CollectionTileCarousel({
   const [pageCount, setPageCount] = useState(count)
   const [perView, setPerView] = useState(1)
   const [measured, setMeasured] = useState(false)
+  // Whether the track is at either scroll limit. Tiles snap individually, so
+  // in paged mode the track can rest between page positions; the arrows must
+  // judge the ends from the real offset, not from the nearest page.
+  const [edges, setEdges] = useState({ start: true, end: false })
   // seq forces a DOM mutation even when the same page is announced twice.
   const [status, setStatus] = useState({ text: "", seq: 0 })
 
@@ -142,6 +151,8 @@ export default function CollectionTileCarousel({
     const { perView: spv, pagePositions } = getLayout(track)
     setPerView(spv)
     setPageCount(pagePositions.length)
+    const maxScroll = track.scrollWidth - track.clientWidth
+    setEdges({ start: track.scrollLeft <= 1, end: track.scrollLeft >= maxScroll - 1 })
     const pending = pendingRef.current
     if (pending != null) {
       const target = Math.min(pending, pagePositions.length - 1)
@@ -182,6 +193,24 @@ export default function CollectionTileCarousel({
     },
     [announce, clearPending, sync]
   )
+
+  /** Move to the first page position strictly beyond (or before) where the track is now. */
+  const step = (direction: 1 | -1) => {
+    const track = trackRef.current
+    if (!track) return
+    const { pagePositions } = getLayout(track)
+    const here = track.scrollLeft
+    let target = direction === 1 ? pagePositions.length - 1 : 0
+    if (direction === 1) {
+      const ahead = pagePositions.findIndex((position) => position > here + 1)
+      if (ahead !== -1) target = ahead
+    } else {
+      pagePositions.forEach((position, index) => {
+        if (position < here - 1) target = index
+      })
+    }
+    goTo(target)
+  }
 
   /** Bring a tile that receives focus fully onto its page, keeping the dots in step. */
   const onTrackFocus = (event: React.FocusEvent<HTMLDivElement>) => {
@@ -295,11 +324,15 @@ export default function CollectionTileCarousel({
       {/* Rhythm from the frames: 24px above the tiles, 32px between them and
           the dots, 24px below. */}
       <div className="flex flex-col gap-8 py-6">
-        {/* The dots precede the tiles in the DOM so they're reached first;
-            CSS order places them below, as designed. They only exist when
-            there is more than one page. */}
+        {/* The controls precede the tiles in the DOM so they're reached
+            first; CSS order places them below, as designed. They only exist
+            when there is more than one page, and the arrows only where the
+            pages are rows. */}
         {pageCount > 1 && (
           <div className={`${styles.controls} order-last flex items-center justify-center gap-4`}>
+            <ControlButton label={text.previous} controls={trackId} disabled={edges.start} onClick={() => step(-1)}>
+              <ControlChevronLeftIcon />
+            </ControlButton>
             <div role="group" aria-label={text.pages} className="flex items-center gap-4">
               {Array.from({ length: pageCount }, (_, position) => (
                 <button
@@ -317,6 +350,9 @@ export default function CollectionTileCarousel({
                 />
               ))}
             </div>
+            <ControlButton label={text.next} controls={trackId} disabled={edges.end} onClick={() => step(1)}>
+              <ControlChevronRightIcon />
+            </ControlButton>
           </div>
         )}
 
@@ -352,5 +388,37 @@ export default function CollectionTileCarousel({
         </div>
       </div>
     </section>
+  )
+}
+
+function ControlButton({
+  label,
+  controls,
+  disabled,
+  onClick,
+  children,
+}: {
+  label: string
+  controls: string
+  disabled: boolean
+  onClick: () => void
+  children: React.ReactNode
+}) {
+  return (
+    <button
+      type="button"
+      aria-label={label}
+      aria-controls={controls}
+      aria-disabled={disabled}
+      onClick={() => {
+        if (!disabled) onClick()
+      }}
+      // The design dims a control at the end of its range rather than
+      // removing it; keeping it focusable means keyboard users don't lose
+      // their place when they reach an end. Looks live in the module.
+      className={`${styles.control} ${styles.arrow}`}
+    >
+      {children}
+    </button>
   )
 }

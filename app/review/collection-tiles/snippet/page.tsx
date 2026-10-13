@@ -53,10 +53,10 @@ export default function CollectionTilesSnippetPage() {
         <ul role="list" className={`flex max-w-3xl list-disc flex-col gap-2 pl-5 text-sm/5 text-pretty text-ink-secondary ${GUTTER}`}>
           <li>
             Insert the whole block as HTML where the tiles should appear. The
-            script at the end sets up the dots; if your Insert HTML change
-            strips scripts, paste that part into the experiment&apos;s custom
-            JavaScript instead. Without it the tiles still scroll and snap,
-            with no dots.
+            script at the end sets up the dots and arrows; if your Insert HTML
+            change strips scripts, paste that part into the experiment&apos;s
+            custom JavaScript instead. Without it the tiles still scroll and
+            snap, with no controls.
           </li>
           <li>
             Every tile links to <code className="font-mono">#</code>. Set each

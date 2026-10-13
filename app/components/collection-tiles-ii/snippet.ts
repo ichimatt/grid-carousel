@@ -22,7 +22,7 @@ const PREFIX = "gsct"
 const CLASS_NAMES = [
   "root", "slide", "desktopBox", "mobileBox", "track", "runway", "controls", "single",
   "tile", "inner", "hero", "copy", "heading", "kicker", "divider", "headline", "link",
-  "chevron", "button", "dot",
+  "chevron", "button", "dot", "arrow", "control",
 ]
 const UNUSED = ["desktopBox", "mobileBox", "single"]
 const cls = (name: string) => `${PREFIX}-${name}`
@@ -47,7 +47,10 @@ const baseStylesheet = `
 .${PREFIX} {
   --color-white: #ffffff;
   --color-ink: #082135;
+  --color-ink-secondary: #5d6165;
   --color-ink-tertiary: #717579;
+  --color-sunken: #f1f4f8;
+  --color-line: #dce0e5;
   --color-focus-ring: #1794ff;
   --shadow-elevation-1: 0 2px 4px 0 rgba(30, 33, 37, 0.1);
   --shadow-elevation-outlined-1: 0 0 0 1px rgba(30, 33, 37, 0.04), 0 2px 4px 0 rgba(30, 33, 37, 0.1);
@@ -100,17 +103,21 @@ const baseStylesheet = `
   gap: 1rem;
 }
 
+.${PREFIX}-dot,
+.${PREFIX}-arrow {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  font: inherit;
+}
+
 .${PREFIX}-dot {
   position: relative;
   width: 0.625rem;
   height: 0.625rem;
-  margin: 0;
-  padding: 0;
-  border: 0;
   border-radius: 9999px;
-  appearance: none;
-  -webkit-appearance: none;
-  font: inherit;
 }
 
 .${PREFIX}-dot::after {
@@ -170,6 +177,13 @@ function graphic(tile: CollectionTileData, index: number): string {
 
 const CHEVRON = `<svg class="${cls("chevron")}" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 12L10 8L6 4"/></svg>`
 const BUTTON_CHEVRON = `<svg class="${cls("icon")}" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7.5 15L12.5 10L7.5 5"/></svg>`
+const ARROW_LEFT = `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12.5 15L7.5 10L12.5 5"/></svg>`
+const ARROW_RIGHT = `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7.5 15L12.5 10L7.5 5"/></svg>`
+
+function arrowMarkup(direction: "previous" | "next", trackId: string): string {
+  const label = direction === "previous" ? "Previous page" : "Next page"
+  return `<button type="button" class="${cls("control")} ${cls("arrow")}" data-step="${direction === "previous" ? -1 : 1}" aria-label="${label}" aria-controls="${trackId}" aria-disabled="${direction === "previous"}">${direction === "previous" ? ARROW_LEFT : ARROW_RIGHT}</button>`
+}
 
 function tileMarkup(tile: CollectionTileData, index: number, count: number): string {
   const theme = [
@@ -212,6 +226,7 @@ const script = String.raw`
     root.setAttribute("data-ready", "");
     var track = root.querySelector(".gsct-track");
     var dotsGroup = root.querySelector(".gsct-dots");
+    var arrows = Array.prototype.slice.call(root.querySelectorAll(".gsct-arrow"));
     var status = root.querySelector(".gsct-status");
     var slides = Array.prototype.slice.call(track.children);
     var titles = slides.map(function (slide) { var h = slide.querySelector("h3"); return h ? h.textContent.trim() : ""; });
@@ -252,6 +267,24 @@ const script = String.raw`
       page = next;
       dots.forEach(function (dot, i) { if (i === next) dot.setAttribute("aria-current", "true"); else dot.removeAttribute("aria-current"); });
     }
+    function setEdges() {
+      var max = track.scrollWidth - track.clientWidth;
+      arrows.forEach(function (arrow) {
+        var atEnd = arrow.getAttribute("data-step") === "-1" ? track.scrollLeft <= 1 : track.scrollLeft >= max - 1;
+        arrow.setAttribute("aria-disabled", atEnd ? "true" : "false");
+      });
+    }
+    function step(direction) {
+      var l = layout();
+      var here = track.scrollLeft;
+      var target = direction === 1 ? l.pages.length - 1 : 0;
+      if (direction === 1) {
+        for (var i = 0; i < l.pages.length; i++) if (l.pages[i] > here + 1) { target = i; break; }
+      } else {
+        for (var j = 0; j < l.pages.length; j++) if (l.pages[j] < here - 1) target = j;
+      }
+      goTo(target, false);
+    }
     function renderDots(pages, per) {
       perView = per;
       dotsGroup.textContent = "";
@@ -275,6 +308,7 @@ const script = String.raw`
     function sync() {
       var l = layout();
       if (l.pages.length !== dots.length || l.per !== perView) { renderDots(l.pages, l.per); setCurrent(Math.min(page, l.pages.length - 1)); }
+      setEdges();
       if (pending !== null) {
         var target = Math.min(pending, l.pages.length - 1);
         if (Math.abs(track.scrollLeft - l.pages[target]) >= 2) return;
@@ -303,6 +337,12 @@ const script = String.raw`
     }
     function startSwipe() { swipe = true; clearPending(); }
 
+    arrows.forEach(function (arrow) {
+      arrow.addEventListener("click", function () {
+        if (arrow.getAttribute("aria-disabled") === "true") return;
+        step(arrow.getAttribute("data-step") === "-1" ? -1 : 1);
+      });
+    });
     track.addEventListener("focusin", function (event) {
       var slide = event.target.closest("[aria-roledescription=slide]");
       if (!slide) return;
@@ -339,6 +379,7 @@ const script = String.raw`
     var initial = layout();
     renderDots(initial.pages, initial.per);
     setCurrent(0);
+    setEdges();
     root.setAttribute("data-measured", "");
   });
 })();
@@ -364,9 +405,11 @@ ${scopedStylesheet()}
 <section class="${PREFIX} ${cls("root")}" aria-roledescription="carousel" aria-label="Course collections" data-count="${dataCount}">
   <div class="${cls("body")}">
     <div class="${cls("controls")}">
+      ${arrowMarkup("previous", trackId)}
       <div class="${cls("dots")}" role="group" aria-label="Choose a page">
         ${items.map((tile, index) => dotMarkup(tile, index, count, trackId)).join("\n        ")}
       </div>
+      ${arrowMarkup("next", trackId)}
     </div>
     <p class="${cls("status")}" role="status" aria-atomic="true"></p>
     <div class="${cls("runway")}">
