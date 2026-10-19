@@ -25,7 +25,7 @@ import {
  */
 export default function MegaNav() {
   return (
-    <div className="max-h-[calc(100dvh-var(--header-h)-var(--overlay-bottom,0px))] overflow-y-auto overscroll-contain bg-white pt-3 pb-10 text-sm/5 font-normal whitespace-nowrap text-ink shadow-elevation-outlined-5 forced-colors:border-b">
+    <div className="max-h-[calc(100dvh-var(--header-h)-var(--overlay-bottom,0px))] overflow-y-auto overscroll-contain bg-white pt-3 pb-6 text-sm/5 font-normal whitespace-nowrap text-ink shadow-elevation-outlined-5 forced-colors:border-b">
       <div className="mx-auto flex w-full max-w-[1360px] items-start gap-6 px-2">
         {linkColumns.map((column, index) => (
           <LinkColumn key={column.title} column={column} id={`mega-nav-column-${index}`} />
