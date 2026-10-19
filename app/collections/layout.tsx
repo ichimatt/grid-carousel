@@ -1,14 +1,6 @@
 import type { Metadata } from "next"
-import { Noto_Sans } from "next/font/google"
 import SiteHeader from "./components/site-header"
-
-// Noto Sans is a variable font on Google Fonts, so one face per style covers
-// the Light Italic search placeholder through the Bold breadcrumb.
-const notoSans = Noto_Sans({
-  variable: "--font-noto-sans",
-  subsets: ["latin"],
-  style: ["normal", "italic"],
-})
+import { notoSans } from "./fonts"
 
 export const metadata: Metadata = {
   title: {
@@ -21,7 +13,7 @@ export const metadata: Metadata = {
 
 /**
  * Chrome for the hi-fi collection pages: the live GetSmarter header (sticky,
- * 56px until the desktop bars appear at 1280px) above a white page. The
+ * 56px until the desktop bars appear at 1250px) above a white page. The
  * header height is exposed as --header-h so sticky content can sit below it.
  */
 export default function CollectionsLayout({
@@ -29,7 +21,7 @@ export default function CollectionsLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <div
-      className={`${notoSans.variable} font-noto flex min-h-dvh flex-col bg-white text-ink [--header-h:56px] xl:[--header-h:104px]`}
+      className={`${notoSans.variable} font-noto flex min-h-dvh flex-col bg-white text-ink [--header-h:56px] navbar:[--header-h:104px]`}
     >
       <SiteHeader />
       {children}

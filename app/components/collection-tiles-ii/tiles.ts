@@ -46,7 +46,7 @@ function tile(
 /**
  * The six tiles from the Figma "collection tile responsiveness" frames, in
  * order, with the ramps their themed instances resolve to (crimson, teal,
- * sage, gold, cobalt, coral).
+ * sage, gold, indigo, vermillion).
  */
 export const collectionTiles: CollectionTileData[] = [
   tile("enterprise-ai", "AI for Executives", "Turn AI into business results", "5 MIT courses", "eye", {

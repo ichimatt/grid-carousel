@@ -1,6 +1,8 @@
 import Image from "next/image"
 import Link from "next/link"
+import ExploreMenu from "./explore-menu"
 import { focusRing } from "./focus-ring"
+import { ChevronDown, navLinkHover } from "./nav-bar"
 
 const navLinks = [
   "Browse Short Courses",
@@ -13,35 +15,22 @@ const navLinks = [
 const navShadow =
   "shadow-[0_3px_3px_rgba(0,0,0,0.16),0_3px_3px_rgba(0,0,0,0.23)]"
 
-function ChevronDown() {
-  return (
-    <svg
-      viewBox="0 0 16 16"
-      width="14"
-      height="14"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="m3 5.5 5 5 5-5" />
-    </svg>
-  )
-}
-
 /**
  * The live GetSmarter header, as captured in the hi-fi Figma frames: a single
- * 56px bar until 1280px, then the grey utility bar over the 64px navy bar.
- * Sticky, so the page flows beneath it without a padding offset.
+ * 56px bar until 1250px (getsmarter.com's own breakpoint), then the grey
+ * utility bar over the 64px navy bar. Sticky, so the page flows beneath it
+ * without a padding offset.
+ *
+ * Given `exploreMenu`, the Explore item becomes a working disclosure that
+ * opens that panel beneath the header, as the mega nav prototype does;
+ * without it Explore is the static button the collection pages show.
  */
-export default function SiteHeader() {
+export default function SiteHeader({ exploreMenu }: { exploreMenu?: React.ReactNode }) {
   return (
     <header className="sticky top-0 z-40">
       {/* Single bar */}
       <div
-        className={`flex h-14 items-stretch bg-ink text-[#eff2f5] xl:hidden ${navShadow}`}
+        className={`flex h-14 items-stretch bg-ink text-[#eff2f5] navbar:hidden ${navShadow}`}
       >
         <button
           type="button"
@@ -88,7 +77,7 @@ export default function SiteHeader() {
       </div>
 
       {/* Utility bar + navigation bar */}
-      <div className="hidden xl:block">
+      <div className="hidden navbar:block">
         <div className="flex h-10 items-stretch bg-[#eff2f5] text-xs text-ink">
           {/* A mode switch rather than the current page, hence aria-current="true". */}
           <a
@@ -144,30 +133,37 @@ export default function SiteHeader() {
           </Link>
           {/* As on getsmarter.com: 10px link padding with the remaining space
               shared out around the links, so they close up rather than wrap
-              as the bar narrows; below 1280px the single bar takes over. */}
+              as the bar narrows; below 1250px the single bar takes over. */}
           <nav
             aria-label="Primary"
             className="flex flex-1 items-stretch justify-around whitespace-nowrap"
           >
-            <button
-              type="button"
-              className={`flex items-center gap-4 px-2.5 ${focusRing}`}
-            >
-              Explore
-              <ChevronDown />
-            </button>
+            {exploreMenu ? (
+              <ExploreMenu>{exploreMenu}</ExploreMenu>
+            ) : (
+              <button
+                type="button"
+                className={`flex items-center gap-4 px-2.5 ${navLinkHover} ${focusRing}`}
+              >
+                Explore
+                <ChevronDown />
+              </button>
+            )}
             {navLinks.map((link) => (
               <a
                 key={link}
                 href="#"
-                className={`flex items-center px-2.5 ${focusRing}`}
+                className={`flex items-center px-2.5 ${navLinkHover} ${focusRing}`}
               >
                 {link}
               </a>
             ))}
           </nav>
-          {/* The search field gives up width first, down to 145px. */}
-          <div className="flex basis-[252px] items-center gap-1 pl-[26px]">
+          {/* The search field gives up width first, down to 120px, and until
+              1280px its left padding narrows: the bar has a search field the
+              live site's lacks, and from 1250px it must still fit beside a
+              classic 17px scrollbar, which the breakpoint's width includes. */}
+          <div className="flex basis-[252px] items-center gap-1 pl-4 xl:pl-[26px]">
             <Image
               src="/collection/icn-search.svg"
               alt=""
@@ -179,7 +175,7 @@ export default function SiteHeader() {
               type="search"
               placeholder="Enter a search term..."
               aria-label="Search"
-              className={`w-0 min-w-[145px] flex-1 rounded-xs bg-transparent py-1 text-sm font-light text-white italic placeholder:text-[#ccc] ${focusRing}`}
+              className={`w-0 min-w-[120px] flex-1 rounded-xs bg-transparent py-1 text-sm font-light text-white italic placeholder:text-[#ccc] ${focusRing}`}
             />
           </div>
           <div className="flex shrink-0 items-center px-5">
