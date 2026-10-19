@@ -19,10 +19,12 @@ export default function Breadcrumb({
         {trail.map((label) => (
           <li key={label} className="flex items-center">
             {/* Vertical padding lifts the 21px row to a 24px target without
-                changing the row height. */}
+                changing the row height. Wrapped rows overlap, so in forced
+                colours a focused link is lifted above the next row, whose
+                backplate would otherwise hide the foot of its outline. */}
             <a
               href="#"
-              className={`-my-0.5 inline-block rounded-xs py-0.5 text-ink-secondary ${focusRing}`}
+              className={`-my-0.5 inline-block rounded-xs py-0.5 text-ink-secondary forced-colors:focus-visible:relative ${focusRing}`}
             >
               {label}
             </a>

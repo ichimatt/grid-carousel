@@ -273,8 +273,10 @@ export default function CompareSection({
                   aria-label={`${course.title} comparison`}
                   onKeyDown={onStripKeyDown}
                   // scroll-ps-3 keeps the 12px lead-in out of the snap maths,
-                  // so the strip loads unscrolled and Home returns to it.
-                  className={`relative -my-1 snap-x snap-mandatory overflow-x-auto px-3 py-1 scroll-ps-3 [scrollbar-width:none] focus-visible:z-10 [&::-webkit-scrollbar]:hidden ${focusRing} focus-visible:ring-inset`}
+                  // so the strip loads unscrolled and Home returns to it. The
+                  // focus ring sits inside the strip, as its card clips
+                  // anything outside; so does the forced-colours outline.
+                  className={`relative -my-1 snap-x snap-mandatory overflow-x-auto px-3 py-1 scroll-ps-3 [scrollbar-width:none] focus-visible:z-10 [&::-webkit-scrollbar]:hidden ${focusRing} focus-visible:ring-inset forced-colors:focus-visible:-outline-offset-2`}
                 >
                   {/* Cards are a fixed 232px (the design's 975px strip of
                       four) so the next one always peeks. */}

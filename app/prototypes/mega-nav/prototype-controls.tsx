@@ -38,7 +38,7 @@ export default function PrototypeControls() {
             aria-hidden="true"
             className="relative h-5 w-9 rounded-full bg-[#b1c0cf] transition-colors group-aria-checked:bg-ink forced-colors:border forced-colors:border-[CanvasText]"
           >
-            <span className="absolute top-0.5 left-0.5 size-4 rounded-full bg-white shadow-elevation-1 transition-transform group-aria-checked:translate-x-4 forced-colors:top-px forced-colors:left-px forced-colors:bg-[CanvasText]" />
+            <span className="absolute top-0.5 left-0.5 size-4 rounded-full bg-white shadow-elevation-1 group-aria-checked:translate-x-4 motion-safe:transition-transform forced-colors:top-px forced-colors:left-px forced-colors:bg-[CanvasText]" />
           </span>
           Keep it open
         </button>

@@ -37,8 +37,10 @@ const legalLinks = [
 const currencies = ["ZAR", "USD", "GBP"]
 
 const textLink = `rounded-xs transition-colors hover:text-white ${focusRing}`
-// Stacked links keep their designed line pitch but get a 24px hit area.
-const stackedLink = `inline-block -my-1 py-1 ${textLink}`
+// Stacked links keep their designed line pitch but get a 24px hit area. They
+// overlap their neighbours, so in forced colours a focused one is lifted
+// above them, or the next link's backplate hides the foot of its outline.
+const stackedLink = `inline-block -my-1 py-1 forced-colors:focus-visible:relative ${textLink}`
 
 /**
  * The GetSmarter site footer (Figma 910:14503 desktop, 910:12695 mobile).

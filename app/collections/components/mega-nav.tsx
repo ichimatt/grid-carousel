@@ -20,12 +20,13 @@ import {
  *
  * Rendered on the server; the Explore menu shows and hides it. On short
  * windows it scrolls within the space below the header, stopping short of
- * anything a page floats over its foot (--overlay-bottom). In forced
- * colours, where its shadow is dropped, a rule marks its lower edge.
+ * anything a page floats over its foot (--overlay-bottom), and keeps a
+ * focused row 4px clear of its edges so the focus ring isn't cut off. In
+ * forced colours, where its shadow is dropped, a rule marks its lower edge.
  */
 export default function MegaNav() {
   return (
-    <div className="max-h-[calc(100dvh-var(--header-h)-var(--overlay-bottom,0px))] overflow-y-auto overscroll-contain bg-white pt-3 pb-6 text-sm/5 font-normal whitespace-nowrap text-ink shadow-elevation-outlined-5 forced-colors:border-b">
+    <div className="max-h-[calc(100dvh-var(--header-h)-var(--overlay-bottom,0px))] overflow-y-auto overscroll-contain scroll-py-1 bg-white pt-3 pb-6 text-sm/5 font-normal whitespace-nowrap text-ink shadow-elevation-outlined-5 forced-colors:border-b">
       <div className="mx-auto flex w-full max-w-[1360px] items-start gap-6 px-2">
         {linkColumns.map((column, index) => (
           <LinkColumn key={column.title} column={column} id={`mega-nav-column-${index}`} />
