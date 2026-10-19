@@ -1,7 +1,8 @@
 /**
- * Content of the desktop mega nav (Figma "mega-nav-desktop", node 1900-27522):
+ * Content of the desktop mega nav (Figma "mega-nav-desktop", node 1902-29345):
  * three columns of links carried over from getsmarter.com, each titled by a
- * link to the full listing, and the new Playbooks column.
+ * link to the full listing and closed by a "View all" link to the same, and
+ * the new Playbooks column.
  */
 export type MegaNavLink = { label: string; href: string }
 
@@ -10,9 +11,11 @@ export type MegaNavLinkColumn = {
   title: string
   href: string
   items: MegaNavLink[]
+  /** The "View all" link at the foot of the column. */
+  footer: MegaNavLink
 }
 
-/** The three colours a playbook item takes from the Figma theme collection. */
+/** The three colours a playbook item takes from its theme in the Figma theme collection. */
 export type PlaybookTheme = {
   /** theme-color (ramp 600): the bar beside the item. */
   color: string
@@ -26,10 +29,6 @@ export type MegaNavPlaybook = {
   title: string
   subtitle: string
   href: string
-  /**
-   * The playbook's own theme, as its collection tile wears it. The Figma
-   * frame leaves every item in the default theme instead (drawnTheme).
-   */
   theme: PlaybookTheme
 }
 
@@ -54,6 +53,7 @@ export const linkColumns: MegaNavLinkColumn[] = [
       "UCT Digital Marketing",
       "UCT Data Science Analysis",
     ]),
+    footer: { label: "View all courses", href: "#" },
   },
   {
     title: "Universities",
@@ -72,6 +72,7 @@ export const linkColumns: MegaNavLinkColumn[] = [
       "Rice University",
       "University of Cape Town Graduate School of Business",
     ]),
+    footer: { label: "View all universities", href: "#" },
   },
   {
     title: "Categories",
@@ -90,21 +91,16 @@ export const linkColumns: MegaNavLinkColumn[] = [
       "Law and Compliance",
       "Operations and Supply Chain Management",
     ]),
+    footer: { label: "View all categories", href: "#" },
   },
 ]
 
 export const playbooksTitle = "Playbooks"
 
 /**
- * Every playbook item in the Figma frame resolves the theme collection's
- * default mode, theme-1 (teal): no item sets a mode of its own.
- */
-export const drawnTheme: PlaybookTheme = { color: "#046971", bg: "#edf8f6", text: "#02434b" }
-
-/**
- * The six playbooks in the frame's order. Subtitles fix two typos in the
- * frame ("yopur", "polcy"). Each theme is the ramp its collection tile uses
- * in the component overview (Figma 1702-4920): ramp 600, 50 and 800.
+ * The six playbooks in the frame's order, each in its own theme (the mode
+ * set on its row in Figma, the ramp its collection tile also wears): ramp
+ * 600, 50 and 800. Subtitles use typographic apostrophes.
  */
 export const playbooks: MegaNavPlaybook[] = [
   {

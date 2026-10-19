@@ -2,15 +2,10 @@
 
 import { createContext, useContext, useMemo, useState } from "react"
 
-export type PlaybookColours = "drawn" | "own"
-
 type ExploreMenuControls = {
   /** Holds the menu open whatever the pointer and keyboard do. */
   pinned: boolean
   setPinned: (pinned: boolean) => void
-  /** "drawn" as in the Figma frame; "own" gives each playbook its theme. */
-  playbookColours: PlaybookColours
-  setPlaybookColours: (colours: PlaybookColours) => void
 }
 
 /**
@@ -21,11 +16,7 @@ const ExploreMenuControlsContext = createContext<ExploreMenuControls | null>(nul
 
 export function ExploreMenuControlsProvider({ children }: { children: React.ReactNode }) {
   const [pinned, setPinned] = useState(false)
-  const [playbookColours, setPlaybookColours] = useState<PlaybookColours>("drawn")
-  const value = useMemo(
-    () => ({ pinned, setPinned, playbookColours, setPlaybookColours }),
-    [pinned, playbookColours]
-  )
+  const value = useMemo(() => ({ pinned, setPinned }), [pinned])
   return (
     <ExploreMenuControlsContext.Provider value={value}>{children}</ExploreMenuControlsContext.Provider>
   )

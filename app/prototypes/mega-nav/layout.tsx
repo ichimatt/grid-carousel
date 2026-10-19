@@ -13,14 +13,16 @@ export const metadata: Metadata = {
 
 /**
  * The hi-fi page chrome with the redesigned mega nav wired into the header's
- * Explore item. A floating panel offers the prototype's own controls.
+ * Explore item. A floating pill offers the prototype's own controls; its
+ * footprint (16px from the foot, 40px tall, plus 16px of air) is reserved as
+ * --overlay-bottom so the open menu never runs underneath it.
  */
 export default function MegaNavPrototypeLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <div
-      className={`${notoSans.variable} font-noto flex min-h-dvh flex-col bg-white text-ink [--header-h:56px] navbar:[--header-h:104px]`}
+      className={`${notoSans.variable} font-noto flex min-h-dvh flex-col bg-white text-ink [--header-h:56px] [--overlay-bottom:4.5rem] navbar:[--header-h:104px]`}
     >
       <ExploreMenuControlsProvider>
         <SiteHeader exploreMenu={<MegaNav />} />
